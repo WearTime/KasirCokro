@@ -1,0 +1,354 @@
+﻿<Window x:Class="KasirCokro.Views.Kasir.RiwayatTransaksi"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Riwayat Transaksi" Height="900" Width="1400"
+        Background="#FAFBFC" WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI"
+        WindowState="Maximized">
+
+    <Window.Resources>
+        <!-- Sidebar Button Style -->
+        <Style x:Key="SidebarButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,16"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8"
+                                Margin="12,2"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F1F5F9"/>
+                                <Setter Property="Foreground" Value="#475569"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Active Sidebar Button Style -->
+        <Style x:Key="ActiveSidebarButton" TargetType="Button" BasedOn="{StaticResource SidebarButton}">
+            <Setter Property="Background" Value="#3B82F6"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2563EB"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#E0E7FF" ShadowDepth="0" BlurRadius="20" Opacity="0.25"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Header Text Style -->
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- Subtitle Text Style -->
+        <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
+
+        <!-- Primary Button Style -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#3B82F6"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2563EB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Secondary Button Style -->
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F1F5F9"/>
+                                <Setter Property="BorderBrush" Value="#CBD5E1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataGrid Style -->
+        <Style x:Key="ModernDataGrid" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserReorderColumns" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="True"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="AlternatingRowBackground" Value="#F8FAFC"/>
+            <Setter Property="RowHeight" Value="50"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <!-- DataGrid Header Style -->
+        <Style x:Key="ModernDataGridColumnHeader" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F1F5F9"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+        <!-- DataGrid Cell Style -->
+        <Style x:Key="ModernDataGridCell" TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#EBF4FF"/>
+                    <Setter Property="Foreground" Value="#1F2937"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Sidebar -->
+        <Border Background="White" Width="280" HorizontalAlignment="Left" 
+                BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
+            <StackPanel Margin="0,24,0,0">
+                <!-- Logo/Brand -->
+                <StackPanel Margin="24,0,24,32" Orientation="Horizontal">
+                    <Border Background="#3B82F6" CornerRadius="8" Width="36" Height="36" Margin="0,0,12,0">
+                        <TextBlock Text="K" FontSize="18" FontWeight="Bold" Foreground="White" 
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Kasir Cokro" FontSize="16" FontWeight="Bold" Foreground="#1F2937"/>
+                        <TextBlock Text="Point of Sale" FontSize="12" Foreground="#6B7280"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Navigation Menu -->
+                <StackPanel>
+                    <Button Style="{StaticResource SidebarButton}" Content="🏠 Dashboard" Click="BtnDashboard_Click"/>
+                    <Button Style="{StaticResource SidebarButton}" Content="🛒 Transaksi" Click="BtnTransaksi_Click"/>
+                    
+                    <Button Style="{StaticResource ActiveSidebarButton}" Content="📋 Riwayat Transaksi"/>
+
+                </StackPanel>
+
+                <!-- User Section -->
+                <StackPanel Margin="24,48,24,24" VerticalAlignment="Bottom">
+                    <Border Background="#F8FAFC" CornerRadius="12" Padding="16">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#3B82F6" CornerRadius="20" Width="40" Height="40" Margin="0,0,12,0">
+                                <TextBlock Text="A" FontSize="16" FontWeight="Bold" Foreground="White" 
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Admin" FontSize="14" FontWeight="Medium" Foreground="#1F2937"/>
+                                <TextBlock Text="Administrator" FontSize="12" Foreground="#6B7280"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Button Style="{StaticResource SidebarButton}" Content="🚪 Logout" Margin="0,8,0,0" 
+                            Click="BtnLogout_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid Margin="280,0,0,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32">
+                <StackPanel>
+                    <!-- Header Section -->
+                    <Grid Margin="0,0,0,32">
+                        <StackPanel HorizontalAlignment="Left">
+                            <TextBlock Style="{StaticResource HeaderTextStyle}" Text="Riwayat Transaksi"/>
+                            <TextBlock Style="{StaticResource SubtitleTextStyle}" 
+                                      Text="Kelola dan lihat semua transaksi yang telah dilakukan"/>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                            <Button Style="{StaticResource SecondaryButtonStyle}" Content="📤 Export" 
+                                    Margin="0,0,12,0" Click="btnExportExcel_Click"/>
+                        </StackPanel>
+                    </Grid>
+
+                    
+
+                    <!-- Statistics Cards -->
+                    <Grid Margin="0,0,0,24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Total Transaksi -->
+                        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Background="#EBF4FF" CornerRadius="8" Width="48" Height="48" Margin="0,0,16,0">
+                                        <TextBlock Text="📊" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Total Transaksi" FontSize="14" Foreground="#6B7280" FontWeight="Medium"/>
+                                        <TextBlock x:Name="txtTotalTransaksi" Text="{Binding TotalTransaksi}" FontSize="24" FontWeight="Bold" Foreground="#1F2937"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock x:Name="txtPeriode" Text="Periode" FontSize="12" Foreground="#6B7280"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Total Penjualan -->
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="6,0,6,0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Background="#F0FDF4" CornerRadius="8" Width="48" Height="48" Margin="0,0,16,0">
+                                        <TextBlock Text="💰" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Total Penjualan" FontSize="14" Foreground="#6B7280" FontWeight="Medium"/>
+                                        <TextBlock x:Name="txtTotalPenjualan" Text="{Binding TotalPenjualan, StringFormat=Rp {0:N0}}" FontSize="24" FontWeight="Bold" Foreground="#1F2937"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Text="Total pendapatan" FontSize="12" Foreground="#10B981"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Rata-rata per Transaksi -->
+                        <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="6,0,6,0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Background="#FEF3C7" CornerRadius="8" Width="48" Height="48" Margin="0,0,16,0">
+                                        <TextBlock Text="📈" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Rata-rata/Transaksi" FontSize="14" Foreground="#6B7280" FontWeight="Medium"/>
+                                        <TextBlock x:Name="txtRataRata" Text="{Binding RataRataPenjualan, StringFormat=Rp {0:N0}}" FontSize="24" FontWeight="Bold" Foreground="#1F2937" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Text="Per transaksi" FontSize="12" Foreground="#92400E"/>
+                            </StackPanel>
+                        </Border>
+
+                        
+                    </Grid>
+
+                    <!-- Transaction History Table -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Daftar Transaksi" FontSize="20" FontWeight="Bold" 
+                                      Foreground="#1F2937" Margin="0,0,0,20"/>
+                            
+                            <DataGrid x:Name="dgTransaksi" 
+                                     Style="{StaticResource ModernDataGrid}"
+                                     ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                                     CellStyle="{StaticResource ModernDataGridCell}"
+                                     ItemsSource="{Binding FilteredTransaksi}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding TransaksiID}" Width="80"/>
+                                    <DataGridTextColumn Header="Kode Transaksi" Binding="{Binding KodeTransaksi}" Width="150"/>
+                                    <DataGridTextColumn Header="Tanggal" Binding="{Binding TanggalFormatted}" Width="120"/>
+                                    <DataGridTextColumn Header="Waktu" Binding="{Binding WaktuFormatted}" Width="100"/>
+                                    <DataGridTextColumn Header="Total Harga" Binding="{Binding TotalHargaFormatted}" Width="150"/>
+                                    
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!-- Pagination -->
+                            <Grid Margin="0,20,0,0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock x:Name="txtShowingInfo" Text="Menampilkan data" FontSize="14" 
+                                              Foreground="#6B7280" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button x:Name="btnPrevious" Style="{StaticResource SecondaryButtonStyle}" 
+                                           Content="← Sebelumnya" Margin="0,0,8,0" Click="BtnPrevious_Click"/>
+                                    <TextBlock x:Name="txtPageInfo" Text="Halaman 1 dari 1" FontSize="14" 
+                                              Foreground="#374151" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <Button x:Name="btnNext" Style="{StaticResource SecondaryButtonStyle}" 
+                                           Content="Selanjutnya →" Click="BtnNext_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

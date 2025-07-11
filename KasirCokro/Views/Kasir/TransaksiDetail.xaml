@@ -1,0 +1,367 @@
+﻿<Window x:Class="KasirCokro.Views.Kasir.TransaksiDetail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Detail Transaksi" Height="800" Width="1200"
+        Background="#FAFBFC" WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <!-- Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#E0E7FF" ShadowDepth="0" BlurRadius="20" Opacity="0.25"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Header Text Style -->
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- Subtitle Text Style -->
+        <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
+
+        <!-- Primary Button Style -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#3B82F6"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2563EB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Secondary Button Style -->
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F1F5F9"/>
+                                <Setter Property="BorderBrush" Value="#CBD5E1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataGrid Style -->
+        <Style x:Key="ModernDataGrid" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserReorderColumns" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="AlternatingRowBackground" Value="#F8FAFC"/>
+            <Setter Property="RowHeight" Value="50"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <!-- DataGrid Header Style -->
+        <Style x:Key="ModernDataGridColumnHeader" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F1F5F9"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+        <!-- DataGrid Cell Style -->
+        <Style x:Key="ModernDataGridCell" TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#EBF4FF"/>
+                    <Setter Property="Foreground" Value="#1F2937"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Info Label Style -->
+        <Style x:Key="InfoLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <!-- Info Value Style -->
+        <Style x:Key="InfoValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+        </Style>
+
+        <!-- Loading Overlay -->
+        <Style x:Key="LoadingOverlay" TargetType="Border">
+            <Setter Property="Background" Value="#80000000"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Main Content -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32">
+            <StackPanel>
+                <!-- Header -->
+                <Border Background="White" CornerRadius="12" Padding="32" Margin="0,0,0,24">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#E0E7FF" ShadowDepth="0" BlurRadius="20" Opacity="0.25"/>
+                    </Border.Effect>
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Left">
+                            <TextBlock Text="Detail Transaksi" Style="{StaticResource HeaderTextStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.NoTransaksi}" Style="{StaticResource SubtitleTextStyle}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="🔄 Refresh" Style="{StaticResource SecondaryButtonStyle}" 
+                                    Margin="0,0,12,0" Click="BtnRefresh_Click"/>
+                            <Button Content="🖨️ Print" Style="{StaticResource PrimaryButtonStyle}" 
+                                    Margin="0,0,12,0" Click="BtnPrint_Click"/>
+                            <Button Content="✕ Close" Style="{StaticResource SecondaryButtonStyle}" 
+                                    Click="BtnClose_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Transaction Info -->
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,0,24">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Margin="0,0,24,0">
+                            <TextBlock Text="Informasi Transaksi" FontSize="18" FontWeight="Bold" 
+                                       Foreground="#1F2937" Margin="0,0,0,20"/>
+
+                            <TextBlock Text="No. Transaksi" Style="{StaticResource InfoLabelStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.NoTransaksi}" Style="{StaticResource InfoValueStyle}"/>
+
+                            <TextBlock Text="Tanggal" Style="{StaticResource InfoLabelStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.TanggalFormatted}" Style="{StaticResource InfoValueStyle}"/>
+
+                            <TextBlock Text="Waktu" Style="{StaticResource InfoLabelStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.WaktuFormatted}" Style="{StaticResource InfoValueStyle}"/>
+                        </StackPanel>
+
+                        <!-- Middle Column -->
+                        <StackPanel Grid.Column="1" Margin="0,0,24,0">
+                            <TextBlock Text="Informasi Pelanggan" FontSize="18" FontWeight="Bold" 
+                                       Foreground="#1F2937" Margin="0,0,0,20"/>
+
+                            <TextBlock Text="Nama Pelanggan" Style="{StaticResource InfoLabelStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.NamaPelanggan}" Style="{StaticResource InfoValueStyle}"/>
+
+                            <TextBlock Text="No. Telepon" Style="{StaticResource InfoLabelStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.NoTelp}" Style="{StaticResource InfoValueStyle}"/>
+
+                            <TextBlock Text="Alamat" Style="{StaticResource InfoLabelStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.Alamat}" Style="{StaticResource InfoValueStyle}" 
+                                       TextWrapping="Wrap" MaxWidth="200"/>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Informasi Pembayaran" FontSize="18" FontWeight="Bold" 
+                                       Foreground="#1F2937" Margin="0,0,0,20"/>
+
+                            <TextBlock Text="Metode Pembayaran" Style="{StaticResource InfoLabelStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.MetodePembayaran}" Style="{StaticResource InfoValueStyle}"/>
+
+                            <TextBlock Text="Status" Style="{StaticResource InfoLabelStyle}"/>
+                            <Border Background="{Binding TransaksiInfo.StatusColor}" 
+                                    CornerRadius="12" Padding="8,4" HorizontalAlignment="Left" Margin="0,0,0,16">
+                                <TextBlock Text="{Binding TransaksiInfo.Status}" 
+                                           Foreground="White" FontSize="12" FontWeight="Medium"/>
+                            </Border>
+
+                            <TextBlock Text="Kasir" Style="{StaticResource InfoLabelStyle}"/>
+                            <TextBlock Text="{Binding TransaksiInfo.NamaKasir}" Style="{StaticResource InfoValueStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Items Detail -->
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,0,24">
+                    <StackPanel>
+                        <TextBlock Text="Detail Item" FontSize="18" FontWeight="Bold" 
+                                   Foreground="#1F2937" Margin="0,0,0,20"/>
+
+                        <DataGrid x:Name="DataGridItems" 
+                                  Style="{StaticResource ModernDataGrid}"
+                                  ItemsSource="{Binding DetailItems}"
+                                  Height="300">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="No" Width="60" 
+                                                    Binding="{Binding No}"
+                                                    HeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                                                    CellStyle="{StaticResource ModernDataGridCell}"/>
+                                <DataGridTextColumn Header="Nama Produk" Width="*" 
+                                                    Binding="{Binding NamaProduk}"
+                                                    HeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                                                    CellStyle="{StaticResource ModernDataGridCell}"/>
+                                <DataGridTextColumn Header="Harga" Width="120" 
+                                                    Binding="{Binding HargaFormatted}"
+                                                    HeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                                                    CellStyle="{StaticResource ModernDataGridCell}"/>
+                                <DataGridTextColumn Header="Qty" Width="80" 
+                                                    Binding="{Binding Qty}"
+                                                    HeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                                                    CellStyle="{StaticResource ModernDataGridCell}"/>
+                                <DataGridTextColumn Header="Subtotal" Width="140" 
+                                                    Binding="{Binding SubtotalFormatted}"
+                                                    HeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                                                    CellStyle="{StaticResource ModernDataGridCell}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Summary -->
+                <Border Style="{StaticResource CardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="300"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Notes -->
+                        <StackPanel Grid.Column="0" Margin="0,0,24,0">
+                            <TextBlock Text="Catatan" FontSize="18" FontWeight="Bold" 
+                                       Foreground="#1F2937" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding TransaksiInfo.Catatan}" 
+                                       FontSize="14" Foreground="#6B7280" 
+                                       TextWrapping="Wrap" LineHeight="20"
+                                       Margin="0,0,0,0"/>
+                        </StackPanel>
+
+                        <!-- Total Summary -->
+                        <Border Grid.Column="1" Background="#F8FAFC" CornerRadius="8" Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="Ringkasan Pembayaran" FontSize="16" FontWeight="Bold" 
+                                           Foreground="#1F2937" Margin="0,0,0,16"/>
+
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="Subtotal" FontSize="14" Foreground="#6B7280"/>
+                                    <TextBlock Text="{Binding TransaksiInfo.SubtotalFormatted}" 
+                                               FontSize="14" Foreground="#1F2937" HorizontalAlignment="Right"/>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="Pajak (PPN 11%)" FontSize="14" Foreground="#6B7280"/>
+                                    <TextBlock Text="{Binding TransaksiInfo.PajakFormatted}" 
+                                               FontSize="14" Foreground="#1F2937" HorizontalAlignment="Right"/>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="Diskon" FontSize="14" Foreground="#6B7280"/>
+                                    <TextBlock Text="{Binding TransaksiInfo.DiskonFormatted}" 
+                                               FontSize="14" Foreground="#EF4444" HorizontalAlignment="Right"/>
+                                </Grid>
+
+                                <Separator Margin="0,12,0,12" Background="#E5E7EB"/>
+
+                                <Grid Margin="0,0,0,16">
+                                    <TextBlock Text="Total" FontSize="18" FontWeight="Bold" Foreground="#1F2937"/>
+                                    <TextBlock Text="{Binding TransaksiInfo.TotalFormatted}" 
+                                               FontSize="18" FontWeight="Bold" Foreground="#059669" HorizontalAlignment="Right"/>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="Bayar" FontSize="14" Foreground="#6B7280"/>
+                                    <TextBlock Text="{Binding TransaksiInfo.BayarFormatted}" 
+                                               FontSize="14" Foreground="#1F2937" HorizontalAlignment="Right"/>
+                                </Grid>
+
+                                <Grid>
+                                    <TextBlock Text="Kembali" FontSize="14" Foreground="#6B7280"/>
+                                    <TextBlock Text="{Binding TransaksiInfo.KembaliFormatted}" 
+                                               FontSize="14" Foreground="#1F2937" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Loading Overlay -->
+        <Border Style="{StaticResource LoadingOverlay}" Panel.ZIndex="999">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="60" Height="60" 
+                             Style="{DynamicResource MaterialDesignCircularProgressBar}"/>
+                <TextBlock Text="Loading..." FontSize="16" Foreground="White" 
+                           Margin="0,16,0,0" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
