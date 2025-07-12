@@ -7,7 +7,7 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <!-- Sidebar Button Style -->
+        
         <Style x:Key="SidebarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#64748B"/>
@@ -39,7 +39,7 @@
             </Setter>
         </Style>
 
-        <!-- Active Sidebar Button Style -->
+        
         <Style x:Key="ActiveSidebarButton" TargetType="Button" BasedOn="{StaticResource SidebarButton}">
             <Setter Property="Background" Value="#3B82F6"/>
             <Setter Property="Foreground" Value="White"/>
@@ -78,7 +78,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!-- Modern Button Style -->
+        
         <Style x:Key="ModernButton" TargetType="Button">
             <Setter Property="Background" Value="#007BFF"/>
             <Setter Property="Foreground" Value="White"/>
@@ -188,7 +188,7 @@
             </Setter>
         </Style>
 
-        <!-- Secondary Button Style -->
+        
         <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
             <Setter Property="Background" Value="#6C757D"/>
             <Style.Triggers>
@@ -198,7 +198,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Success Button Style -->
+        
         <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
             <Setter Property="Background" Value="#28A745"/>
             <Style.Triggers>
@@ -208,7 +208,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Modern TextBox Style -->
+        
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="48"/>
             <Setter Property="Padding" Value="12,6.7"/>
@@ -236,7 +236,7 @@
             </Setter>
         </Style>
 
-        <!-- Modern DatePicker Style -->
+        
         <Style x:Key="ModernDatePicker" TargetType="DatePicker">
             <Setter Property="Padding" Value="12,10"/>
             <Setter Property="BorderBrush" Value="#DEE2E6"/>
@@ -273,7 +273,7 @@
             </Setter>
         </Style>
 
-        <!-- Modern DataGrid Style -->
+        
         <Style x:Key="ModernDataGrid" TargetType="DataGrid">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="#DEE2E6"/>
@@ -286,7 +286,7 @@
             <Setter Property="FontSize" Value="14"/>
         </Style>
 
-        <!-- DataGrid Header Style -->
+        
         <Style x:Key="ModernDataGridColumnHeader" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#F8F9FA"/>
             <Setter Property="Foreground" Value="#495057"/>
@@ -297,7 +297,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
 
-        <!-- DataGrid Row Style -->
+        
         <Style x:Key="ModernDataGridRow" TargetType="DataGridRow">
             <Setter Property="Padding" Value="0,8"/>
             <Style.Triggers>
@@ -307,7 +307,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- DataGrid Cell Style -->
+        
         <Style x:Key="ModernDataGridCell" TargetType="DataGridCell">
             <Setter Property="Padding" Value="12,12"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -323,7 +323,7 @@
             </Setter>
         </Style>
 
-        <!-- Card Style -->
+        
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -337,12 +337,12 @@
     </Window.Resources>
 
     <Grid>
-        <!-- Sidebar -->
+        
         <Border Background="White" Width="240" HorizontalAlignment="Left" 
                 BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,16,0,0">
-                    <!-- Logo/Brand -->
+                    
                     <StackPanel Margin="16,0,16,20">
                         <StackPanel Orientation="Horizontal">
                             <Border Background="#3B82F6" CornerRadius="6" Width="28" Height="28" Margin="0,0,10,0">
@@ -355,7 +355,7 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <!-- Main Navigation Menu -->
+                    
                     <StackPanel Margin="0,0,0,16">
                         <TextBlock Text="MAIN" FontSize="10" FontWeight="SemiBold" 
                                    Foreground="#9CA3AF" Margin="16,0,16,8"/>
@@ -403,7 +403,7 @@
                         </Button>
                     </StackPanel>
 
-                    <!-- Reports Section -->
+                    
                     <StackPanel Margin="0,0,0,16">
                         <TextBlock Text="LAPORAN" FontSize="10" FontWeight="SemiBold" 
                                    Foreground="#9CA3AF" Margin="16,0,16,8"/>
@@ -437,7 +437,7 @@
                         </Button>
                     </StackPanel>
 
-                    <!-- User Section -->
+                    
                     <Border Background="#F8FAFC" CornerRadius="8" Margin="16,0,16,16" Padding="12">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
@@ -455,9 +455,9 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
-        <!-- Main Content -->
+        
         <Grid Margin="240,0,0,0">
-            <!-- Top Bar -->
+            
             <Border Background="White" Height="80" VerticalAlignment="Top" 
                     BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
                 <Grid Margin="32,0">
@@ -466,7 +466,7 @@
                         <TextBlock Text="Kelola barang masuk dari supplier" FontSize="16" Foreground="#6B7280" FontWeight="Medium"/>
                     </StackPanel>
 
-                    <!-- Total Section di Header -->
+                    
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Border Background="#E8F5E8" CornerRadius="8" Padding="16,8" Margin="0,0,16,0">
                             <StackPanel Orientation="Horizontal">
@@ -490,7 +490,7 @@
                 </Grid>
             </Border>
 
-            <!-- Dashboard Content -->
+            
             <ScrollViewer Margin="0,80,0,0" VerticalScrollBarVisibility="Auto">
                 <Grid Margin="24">
                     <Grid.RowDefinitions>
@@ -499,7 +499,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Scanner Section -->
+                    
                     <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0,0,0,20">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -530,7 +530,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- Data Table Section -->
+                    
                     <Border Grid.Row="2" Style="{StaticResource CardStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -609,7 +609,7 @@
             </ScrollViewer>
         </Grid>
 
-        <!-- Modal untuk Detail Produk -->
+        
         <Grid x:Name="modalOverlay" Background="#80000000" Visibility="Collapsed">
             <Border Background="White" CornerRadius="12" Width="500" Height="450" 
                     HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -624,17 +624,17 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Header Modal -->
+                    
                     <StackPanel Grid.Row="0" Margin="0,0,0,20">
                         <TextBlock Text="📦 Detail Barang Masuk" FontSize="20" FontWeight="Bold" 
                                    Foreground="#212529" HorizontalAlignment="Center" Margin="0,0,0,8"/>
                         <Separator Background="#DEE2E6"/>
                     </StackPanel>
 
-                    <!-- Content Modal -->
+                    
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <!-- Info Produk -->
+                            
                             <Border Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -662,7 +662,7 @@
                                 </Grid>
                             </Border>
 
-                            <!-- Input Section -->
+                            
                             <StackPanel>
                                 <TextBlock Text="Quantity:" FontWeight="SemiBold" Margin="0,0,0,8"/>
                                 <TextBox x:Name="txtModalQuantity" Style="{StaticResource ModernTextBox}" 
@@ -691,7 +691,7 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- Footer Modal -->
+                    
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
                         <Button Content="❌ Batal" Click="BtnModalBatal_Click" 
                                 Style="{StaticResource SecondaryButton}" 
@@ -704,9 +704,9 @@
             </Border>
         </Grid>
 
-        <!-- Tambahkan modal ini sebelum penutup tag Grid terakhir di XAML -->
+        
 
-        <!-- Modal untuk Input Manual -->
+        
         <Grid x:Name="modalManualOverlay" Background="#80000000" Visibility="Collapsed">
             <Border Background="White" CornerRadius="12" Width="550" Height="600" 
             HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -721,7 +721,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Header Modal -->
+                    
                     <StackPanel Grid.Row="0" Margin="0,0,0,20">
                         <TextBlock Text="📝 Input Manual Barang Masuk" FontSize="20" FontWeight="Bold" 
                            Foreground="#212529" HorizontalAlignment="Center" Margin="0,0,0,8"/>
@@ -730,10 +730,10 @@
                         <Separator Background="#DEE2E6"/>
                     </StackPanel>
 
-                    <!-- Content Modal -->
+                    
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <!-- Data Produk Section -->
+                            
                             <TextBlock Text="📦 Data Produk" FontSize="16" FontWeight="Bold" 
                                Foreground="#495057" Margin="0,0,0,12"/>
 
@@ -752,21 +752,21 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <!-- Barcode -->
+                                    
                                     <StackPanel Grid.Row="0" Margin="0,0,0,12">
                                         <TextBlock Text="Barcode:" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                         <TextBox x:Name="txtManualBarcode" Style="{StaticResource ModernTextBox}" 
                                          />
                                     </StackPanel>
 
-                                    <!-- Nama Produk -->
+                                    
                                     <StackPanel Grid.Row="1" Margin="0,0,0,12">
                                         <TextBlock Text="Nama Produk:" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                         <TextBox x:Name="txtManualNamaProduk" Style="{StaticResource ModernTextBox}" 
                                          />
                                     </StackPanel>
 
-                                    <!-- Stok Saat Ini -->
+                                    
                                     <StackPanel Grid.Row="2" Margin="0,0,0,12">
                                         <TextBlock Text="Stok Saat Ini:" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                         <TextBox x:Name="txtManualStok" Style="{StaticResource ModernTextBox}" 
@@ -779,7 +779,7 @@
                                          Text="0" />
                                     </StackPanel>
 
-                                    <!-- Supplier -->
+                                    
                                     <StackPanel Grid.Row="4" Margin="0,0,0,0">
                                         <TextBlock Text="Supplier:" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                         <ComboBox x:Name="txtManualSupplier" 
@@ -816,19 +816,19 @@
                                 </Grid>
                             </Border>
 
-                            <!-- Transaksi Section -->
+                            
                             <TextBlock Text="💼 Data Transaksi" FontSize="16" FontWeight="Bold" 
                                Foreground="#495057" Margin="0,0,0,12"/>
 
                             <StackPanel>
-                                <!-- Quantity -->
+                                
                                 <StackPanel Margin="0,0,0,12">
                                     <TextBlock Text="Quantity:" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                     <TextBox x:Name="txtManualQuantity" Style="{StaticResource ModernTextBox}" 
                                      Text="1" TextChanged="TxtManualQuantity_TextChanged"/>
                                 </StackPanel>
 
-                                <!-- Harga Beli -->
+                                
                                 <StackPanel Margin="0,0,0,12">
                                     <TextBlock Text="Harga Beli:" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                     <TextBox x:Name="txtManualHargaBeli" Style="{StaticResource ModernTextBox}" 
@@ -842,17 +842,17 @@
                                 </StackPanel>
                                 
 
-                                <!-- Checkbox Kredit -->
+                                
                                 <CheckBox x:Name="chkManualKredit" Content="Pembelian Kredit" FontWeight="SemiBold" 
                                   Margin="0,0,0,8" Checked="ChkManualKredit_Checked" Unchecked="ChkManualKredit_Unchecked"/>
 
-                                <!-- Supplier Kredit (Hidden by default) -->
+                                
                                 <StackPanel x:Name="pnlManualSupplierKredit" Visibility="Collapsed" Margin="0,0,0,12">
                                     <TextBlock Text="Nama Supplier Kredit:" FontWeight="SemiBold" Margin="0,8,0,4"/>
                                     <TextBox x:Name="txtManualSupplierKredit" Style="{StaticResource ModernTextBox}"/>
                                 </StackPanel>
 
-                                <!-- Total -->
+                                
                                 <Border Background="#E8F5E8" CornerRadius="8" Padding="16" Margin="0,8,0,0">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <TextBlock Text="💰 Total Transaksi:" FontWeight="Bold" FontSize="16" Margin="0,0,8,0"/>
@@ -863,7 +863,7 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- Footer Modal -->
+                    
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
                         <Button Content="❌ Batal" Click="BtnManualBatal_Click" 
                         Style="{StaticResource SecondaryButton}" 

@@ -97,7 +97,7 @@ namespace KasirCokro.Views.Admin
 
         private void TxtBarcode_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Auto search ketika panjang barcode mencapai 13 karakter (standar EAN-13)
+
             string barcode = txtBarcode.Text.Trim();
 
             if (txtBarcode.Text.Length >= 13)
@@ -212,7 +212,7 @@ namespace KasirCokro.Views.Admin
                     return;
                 }
 
-                // Cek apakah produk sudah ada di keranjang
+
                 var existingItem = keranjangItems.FirstOrDefault(k => k.Barcode == currentSelectedProduct.Barcode);
                 if (existingItem != null)
                 {
@@ -231,7 +231,7 @@ namespace KasirCokro.Views.Admin
                         MarkUp = currentSelectedProduct.MarkUp,
                         SupplierId = currentSelectedProduct.SupplierId
                     });
-                    
+
                 }
 
                 modalOverlay.Visibility = Visibility.Collapsed;
@@ -386,7 +386,7 @@ namespace KasirCokro.Views.Admin
                 if (item.Content?.ToString() == "Kredit")
                 {
                     pnlNamaPelanggan.Visibility = Visibility.Visible;
-                    // Untuk kredit, kosongkan jumlah bayar agar user bisa input DP
+
                     txtJumlahBayar.Clear();
                     txtJumlahBayar.IsReadOnly = false;
                 }
@@ -411,7 +411,7 @@ namespace KasirCokro.Views.Admin
 
                 if (metodePembayaran == "Kredit")
                 {
-                    // Untuk kredit, tampilkan sisa yang harus dibayar
+
                     decimal sisaPembayaran = totalTransaksi - jumlahBayar;
                     if (sisaPembayaran > 0)
                     {
@@ -431,7 +431,7 @@ namespace KasirCokro.Views.Admin
                 }
                 else
                 {
-                    // Untuk tunai, tampilkan kembalian normal
+
                     decimal kembalian = jumlahBayar - totalTransaksi;
                     txtKembalian.Text = $"Rp {kembalian:N0}";
 
@@ -474,14 +474,14 @@ namespace KasirCokro.Views.Admin
                 return;
             }
 
-            // Validasi untuk kredit - minimal bayar 1 rupiah
+
             if (metodePembayaran == "kredit" && jumlahBayar <= 0)
             {
                 MessageBox.Show("Untuk pembayaran kredit, minimal harus ada pembayaran DP!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Validasi untuk tunai - harus bayar penuh
+
             if (metodePembayaran == "tunai" && jumlahBayar < totalTransaksi)
             {
                 MessageBox.Show("Jumlah bayar kurang untuk pembayaran tunai!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -495,7 +495,7 @@ namespace KasirCokro.Views.Admin
                 await SimpanTransaksi(metodePembayaran, namaPelanggan, jumlahBayar);
                 ShowSuccessMessage("Transaksi berhasil disimpan!");
 
-                // Reset form
+
                 await Task.Delay(2000);
                 ResetForm();
             }
@@ -518,7 +518,7 @@ namespace KasirCokro.Views.Admin
                 {
                     try
                     {
-                        // Insert transactions
+
                         foreach (var item in keranjangItems)
                         {
                             string insertQuery = @"INSERT INTO transactions 
@@ -543,7 +543,7 @@ namespace KasirCokro.Views.Admin
                             cmd.Parameters.AddWithValue("@namaPelanggan", namaPelanggan);
                             cmd.Parameters.AddWithValue("@tunai", jumlahBayar);
 
-                            // Status berdasarkan pembayaran
+
                             string status;
                             if (metodePembayaran == "kredit")
                             {
@@ -559,7 +559,7 @@ namespace KasirCokro.Views.Admin
 
                             await cmd.ExecuteNonQueryAsync();
 
-                            // Update stock
+
                             string updateStockQuery = @"UPDATE products 
                                                       SET stok = stok - @qty,
                                                           pendapatan = pendapatan + @subtotal,
@@ -575,7 +575,7 @@ namespace KasirCokro.Views.Admin
                             await stockCmd.ExecuteNonQueryAsync();
                         }
 
-                        // Jika kredit dan belum lunas, masukkan ke tabel pembayaran
+
                         if (metodePembayaran == "kredit" && jumlahBayar < totalTransaksi)
                         {
                             string insertPembayaranQuery = @"INSERT INTO pembayaran 
@@ -641,7 +641,7 @@ namespace KasirCokro.Views.Admin
             float leftMargin = 10;
             float rightMargin = e.PageBounds.Width - 10;
 
-            // Header
+
             e.Graphics.DrawString("COKRO STORE", headerFont, brush, leftMargin, yPos);
             yPos += 20;
             e.Graphics.DrawString("Jl. Contoh No. 123", normalFont, brush, leftMargin, yPos);
@@ -649,11 +649,11 @@ namespace KasirCokro.Views.Admin
             e.Graphics.DrawString("Telp: 021-12345678", normalFont, brush, leftMargin, yPos);
             yPos += 25;
 
-            // Line separator
+
             e.Graphics.DrawLine(new Pen(Color.Black), leftMargin, yPos, rightMargin - 150, yPos);
             yPos += 10;
 
-            // Transaction info
+
             e.Graphics.DrawString($"No. Transaksi: {currentTransactionCode}", normalFont, brush, leftMargin, yPos);
             yPos += 15;
             e.Graphics.DrawString($"Tanggal: {DateTime.Now:dd/MM/yyyy HH:mm:ss}", normalFont, brush, leftMargin, yPos);
@@ -661,11 +661,11 @@ namespace KasirCokro.Views.Admin
             e.Graphics.DrawString($"Kasir: Kasir User", normalFont, brush, leftMargin, yPos);
             yPos += 20;
 
-            // Line separator
+
             e.Graphics.DrawLine(new Pen(Color.Black), leftMargin, yPos, rightMargin - 150, yPos);
             yPos += 10;
 
-            // Items
+
             foreach (var item in keranjangItems)
             {
                 e.Graphics.DrawString(item.NamaProduk, normalFont, brush, leftMargin, yPos);
@@ -675,11 +675,11 @@ namespace KasirCokro.Views.Admin
                 yPos += 20;
             }
 
-            // Line separator
+
             e.Graphics.DrawLine(new Pen(Color.Black), leftMargin, yPos, rightMargin - 150, yPos);
             yPos += 10;
 
-            // Total
+
             e.Graphics.DrawString($"Total: Rp {totalTransaksi:N0}", headerFont, brush, leftMargin, yPos);
             yPos += 20;
 
@@ -715,7 +715,7 @@ namespace KasirCokro.Views.Admin
 
             yPos += 10;
 
-            // Footer
+
             e.Graphics.DrawString("Terima kasih atas kunjungan Anda!", normalFont, brush, leftMargin, yPos);
             yPos += 15;
             e.Graphics.DrawString("Barang yang sudah dibeli tidak dapat dikembalikan", smallFont, brush, leftMargin, yPos);
@@ -749,7 +749,7 @@ namespace KasirCokro.Views.Admin
             txtBarcode.Focus();
         }
 
-        // Navigation methods
+
         private void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
             Views.Admin.DashboardAdmin dashboard = new Views.Admin.DashboardAdmin();
@@ -800,7 +800,7 @@ namespace KasirCokro.Views.Admin
 
         private void TransactionKeluar_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to Transaction Keluar page
+
             var transactionKeluarWindow = new TransactionKeluarPage();
             transactionKeluarWindow.Show();
             this.Close();
@@ -816,7 +816,7 @@ namespace KasirCokro.Views.Admin
         {
             if (MessageBox.Show("Apakah Anda yakin ingin logout?", "Konfirmasi", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                // Navigate to login page
+
                 var loginPage = new LoginWindow();
                 loginPage.Show();
                 this.Close();
@@ -829,7 +829,7 @@ namespace KasirCokro.Views.Admin
         }
     }
 
-    // Model classes
+
     public class KeranjangItem : INotifyPropertyChanged
     {
         private int _quantity;

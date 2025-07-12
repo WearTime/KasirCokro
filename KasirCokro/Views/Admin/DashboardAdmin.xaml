@@ -8,7 +8,7 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <!-- Sidebar Button Style -->
+        
         <Style x:Key="SidebarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#64748B"/>
@@ -40,7 +40,7 @@
             </Setter>
         </Style>
 
-        <!-- Active Sidebar Button Style -->
+        
         <Style x:Key="ActiveSidebarButton" TargetType="Button" BasedOn="{StaticResource SidebarButton}">
             <Setter Property="Background" Value="#3B82F6"/>
             <Setter Property="Foreground" Value="White"/>
@@ -52,7 +52,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Card Style -->
+        
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -64,7 +64,7 @@
             </Setter>
         </Style>
 
-        <!-- Header Text Style -->
+        
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="32"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -72,14 +72,14 @@
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
-        <!-- Subtitle Text Style -->
+        
         <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Foreground" Value="#6B7280"/>
             <Setter Property="FontWeight" Value="Medium"/>
         </Style>
 
-        <!-- Metric Label Style -->
+        
         <Style x:Key="MetricLabelStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#6B7280"/>
@@ -87,14 +87,14 @@
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
-        <!-- Metric Value Style -->
+        
         <Style x:Key="MetricValueStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="#111827"/>
         </Style>
 
-        <!-- Primary Button Style -->
+        
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#3B82F6"/>
             <Setter Property="Foreground" Value="White"/>
@@ -122,7 +122,7 @@
             </Setter>
         </Style>
 
-        <!-- Danger Button Style -->
+        
         <Style x:Key="DangerButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#EF4444"/>
             <Setter Property="Foreground" Value="White"/>
@@ -150,7 +150,7 @@
             </Setter>
         </Style>
 
-        <!-- Modern Tab Style -->
+        
         <Style x:Key="ModernTabStyle" TargetType="TabItem">
             <Setter Property="Template">
                 <Setter.Value>
@@ -180,7 +180,7 @@
             </Setter>
         </Style>
 
-        <!-- Modern DataGrid Style -->
+        
         <Style x:Key="ModernDataGridStyle" TargetType="DataGrid">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="#E5E7EB"/>
@@ -198,7 +198,7 @@
             <Setter Property="SelectionUnit" Value="FullRow"/>
         </Style>
 
-        <!-- DataGrid Header Style -->
+        
         <Style x:Key="ModernDataGridColumnHeader" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#F9FAFB"/>
             <Setter Property="Foreground" Value="#374151"/>
@@ -210,7 +210,7 @@
             <Setter Property="Height" Value="48"/>
         </Style>
 
-        <!-- DataGrid Row Style -->
+        
         <Style x:Key="ModernDataGridRowStyle" TargetType="DataGridRow">
             <Setter Property="Height" Value="56"/>
             <Setter Property="FontSize" Value="14"/>
@@ -219,12 +219,12 @@
     </Window.Resources>
 
     <Grid>
-        <!-- Sidebar -->
+        
         <Border Background="White" Width="240" HorizontalAlignment="Left" 
                 BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,16,0,0">
-                    <!-- Logo/Brand -->
+                    
                     <StackPanel Margin="16,0,16,20">
                         <StackPanel Orientation="Horizontal">
                             <Border Background="#3B82F6" CornerRadius="6" Width="28" Height="28" Margin="0,0,10,0">
@@ -237,7 +237,7 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <!-- Main Navigation Menu -->
+                    
                     <StackPanel Margin="0,0,0,16">
                         <TextBlock Text="MAIN" FontSize="10" FontWeight="SemiBold" 
                                    Foreground="#9CA3AF" Margin="16,0,16,8"/>
@@ -285,7 +285,7 @@
                         </Button>
                     </StackPanel>
 
-                    <!-- Reports Section -->
+                    
                     <StackPanel Margin="0,0,0,16">
                         <TextBlock Text="LAPORAN" FontSize="10" FontWeight="SemiBold" 
                                    Foreground="#9CA3AF" Margin="16,0,16,8"/>
@@ -319,7 +319,7 @@
                         </Button>
                     </StackPanel>
 
-                    <!-- User Section -->
+                    
                     <Border Background="#F8FAFC" CornerRadius="8" Margin="16,0,16,16" Padding="12">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
@@ -337,9 +337,9 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
-        <!-- Main Content -->
+        
         <Grid Margin="240,0,0,0">
-            <!-- Top Bar -->
+            
             <Border Background="White" Height="100" VerticalAlignment="Top" 
                     BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
                 <Grid Margin="35,0">
@@ -350,7 +350,7 @@
                 </Grid>
             </Border>
 
-            <!-- Dashboard Content -->
+            
             <ScrollViewer Margin="0,80,0,0" VerticalScrollBarVisibility="Auto">
                 <Grid Margin="32">
                     <Grid.RowDefinitions>
@@ -360,9 +360,9 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Metrics Cards -->
+                    
                     <UniformGrid Grid.Row="0" Columns="3" Margin="0,0,0,32">
-                        <!-- Penjualan Hari Ini -->
+                        
                         <Border Style="{StaticResource CardStyle}" Margin="0,0,16,0">
                             <StackPanel>
                                 <Grid>
@@ -380,7 +380,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Pendapatan Hari Ini -->
+                        
                         <Border Style="{StaticResource CardStyle}" Margin="8,0">
                             <StackPanel>
                                 <Grid>
@@ -398,7 +398,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Stok Rendah -->
+                        
                         <Border Style="{StaticResource CardStyle}" Margin="16,0,0,0">
                             <StackPanel>
                                 <Grid>
@@ -417,7 +417,7 @@
                         </Border>
                     </UniformGrid>
 
-                    <!-- Chart Penjualan Harian -->
+                    
                     <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,32">
                         <StackPanel>
                             <TextBlock Text="Grafik Penjualan Harian" FontSize="20" FontWeight="SemiBold"
@@ -427,7 +427,7 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Chart Keuntungan -->
+                    
                     <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="0,0,0,32">
                         <StackPanel>
                             <TextBlock Text="Grafik Keuntungan 7 Hari Terakhir" FontSize="20" FontWeight="SemiBold"
@@ -437,7 +437,7 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Low Stock Table -->
+                    
                     <Border Grid.Row="3" Style="{StaticResource CardStyle}">
                         <StackPanel>
                             <Grid Margin="0,0,0,24">

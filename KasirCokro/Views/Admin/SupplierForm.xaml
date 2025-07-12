@@ -12,7 +12,7 @@
         ResizeMode="NoResize"
         WindowState="Maximized">
 	<Window.Resources>
-		<!-- Primary Button Style -->
+		
 		<Style x:Key="PrimaryButton" TargetType="Button">
 			<Setter Property="Background" Value="#3B82F6"/>
 			<Setter Property="Foreground" Value="White"/>
@@ -47,7 +47,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Secondary Button Style -->
+		
 		<Style x:Key="SecondaryButton" TargetType="Button">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="Foreground" Value="#6B7280"/>
@@ -79,7 +79,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Modern Input Style -->
+		
 		<Style x:Key="ModernInput" TargetType="TextBox">
 			<Setter Property="Height" Value="48"/>
 			<Setter Property="Padding" Value="16,12"/>
@@ -115,7 +115,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Modern ComboBox Style -->
+		
 		<Style x:Key="ModernComboBox" TargetType="ComboBox">
 			<Setter Property="Height" Value="48"/>
 			<Setter Property="Padding" Value="16,12"/>
@@ -259,7 +259,7 @@
 		</Style>
 
 
-		<!-- Label Style -->
+		
 		<Style x:Key="InputLabel" TargetType="TextBlock">
 			<Setter Property="FontSize" Value="14"/>
 			<Setter Property="FontWeight" Value="Medium"/>
@@ -267,7 +267,7 @@
 			<Setter Property="Margin" Value="0,0,0,8"/>
 		</Style>
 
-		<!-- Modal Container Style -->
+		
 		<Style x:Key="ModalContainer" TargetType="Border">
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="CornerRadius" Value="20"/>
@@ -279,7 +279,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Header Style -->
+		
 		<Style x:Key="HeaderText" TargetType="TextBlock">
 			<Setter Property="FontSize" Value="32"/>
 			<Setter Property="FontWeight" Value="Bold"/>
@@ -287,14 +287,14 @@
 			<Setter Property="Margin" Value="0,0,0,8"/>
 		</Style>
 
-		<!-- Subtitle Style -->
+		
 		<Style x:Key="SubtitleText" TargetType="TextBlock">
 			<Setter Property="FontSize" Value="16"/>
 			<Setter Property="Foreground" Value="#6B7280"/>
 			<Setter Property="Margin" Value="0,0,0,40"/>
 		</Style>
 
-		<!-- Close Button Style -->
+		
 		<Style x:Key="CloseButton" TargetType="Button">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="Foreground" Value="#6B7280"/>
@@ -333,7 +333,7 @@
         VerticalAlignment="Center">
 
 			<Grid>
-				<!-- Close Button -->
+				
 				<Button Content="×"
                 Style="{StaticResource CloseButton}"
                 HorizontalAlignment="Right"
@@ -341,16 +341,16 @@
                 Margin="0,-10,-10,0"
                 Click="BtnBatal_Click"/>
 
-				<!-- Form Content -->
+				
 				<ScrollViewer VerticalScrollBarVisibility="Auto"
               HorizontalScrollBarVisibility="Disabled"
               Margin="0,20,0,0">
 					<StackPanel>
-						<!-- Header Section -->
+						
 						<TextBlock Text="Form Produk" Style="{StaticResource HeaderText}"/>
 						<TextBlock Text="Tambah atau edit data produk dengan lengkap" Style="{StaticResource SubtitleText}"/>
 
-						<!-- Form Fields -->
+						
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
@@ -368,7 +368,7 @@
              ToolTip="Masukkan nama supplier"/>
 							</StackPanel>
 
-							<!-- Kontak Field -->
+							
 							<StackPanel Grid.Row="1" Margin="0,0,0,20">
 								<TextBlock Text="Kontak" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtKontak"
@@ -376,7 +376,7 @@
              ToolTip="Masukkan nomor telepon atau email"/>
 							</StackPanel>
 
-							<!-- Alamat Field -->
+							
 							<StackPanel Grid.Row="3" Margin="0,0,0,32">
 								<TextBlock Text="Alamat" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtAlamat"

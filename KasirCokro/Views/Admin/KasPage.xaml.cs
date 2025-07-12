@@ -80,7 +80,7 @@ namespace KasirCokro.Views.Admin
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
 
-                    // Query untuk mendapatkan data kas per tanggal
+                    
                     string query = @"
                         SELECT 
                             DATE(t.tanggal_transaksi) as tanggal,
@@ -153,7 +153,7 @@ namespace KasirCokro.Views.Admin
             txtSuccessMessage.Text = message;
             successMessage.Visibility = Visibility.Visible;
 
-            // Auto hide after 3 seconds
+            
             var timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(3);
             timer.Tick += (s, e) =>
@@ -164,7 +164,7 @@ namespace KasirCokro.Views.Admin
             timer.Start();
         }
 
-        // Event Handlers
+        
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (dpTanggalFrom.SelectedDate.HasValue && dpTanggalTo.SelectedDate.HasValue)
@@ -233,7 +233,7 @@ namespace KasirCokro.Views.Admin
         {
             try
             {
-                // Dialog untuk save file
+                
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
                     Filter = "Excel files (*.xlsx)|*.xlsx",
@@ -246,19 +246,19 @@ namespace KasirCokro.Views.Admin
                     {
                         var worksheet = workbook.Worksheets.Add("Data Kas");
 
-                        // Header
+                        
                         worksheet.Cell(1, 1).Value = "LAPORAN KAS";
                         worksheet.Cell(1, 1).Style.Font.Bold = true;
                         worksheet.Cell(1, 1).Style.Font.FontSize = 16;
                         worksheet.Range(1, 1, 1, 5).Merge();
 
-                        // Periode
+                        
                         DateTime fromDate = dpTanggalFrom.SelectedDate ?? DateTime.Now.AddMonths(-1);
                         DateTime toDate = dpTanggalTo.SelectedDate ?? DateTime.Now;
                         worksheet.Cell(2, 1).Value = $"Periode: {fromDate:dd/MM/yyyy} - {toDate:dd/MM/yyyy}";
                         worksheet.Range(2, 1, 2, 5).Merge();
 
-                        // Header tabel
+                        
                         worksheet.Cell(4, 1).Value = "No";
                         worksheet.Cell(4, 2).Value = "Tanggal";
                         worksheet.Cell(4, 3).Value = "Pendapatan";
@@ -266,13 +266,13 @@ namespace KasirCokro.Views.Admin
                         worksheet.Cell(4, 5).Value = "Total";
                         worksheet.Cell(4, 6).Value = "Keterangan";
 
-                        // Style header
+                        
                         var headerRange = worksheet.Range(4, 1, 4, 6);
                         headerRange.Style.Font.Bold = true;
                         headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
                         headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
-                        // Data
+                        
                         int row = 5;
                         int no = 1;
                         decimal totalPendapatan = 0;
@@ -288,7 +288,7 @@ namespace KasirCokro.Views.Admin
                             worksheet.Cell(row, 5).Value = data.Total;
                             worksheet.Cell(row, 6).Value = data.Keterangan;
 
-                            // Format currency
+                            
                             worksheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0";
                             worksheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0";
                             worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
@@ -300,7 +300,7 @@ namespace KasirCokro.Views.Admin
                             row++;
                         }
 
-                        // Total row
+                        
                         worksheet.Cell(row, 1).Value = "TOTAL";
                         worksheet.Cell(row, 2).Value = "";
                         worksheet.Cell(row, 3).Value = totalPendapatan;
@@ -308,13 +308,13 @@ namespace KasirCokro.Views.Admin
                         worksheet.Cell(row, 5).Value = grandTotal;
                         worksheet.Cell(row, 6).Value = "";
 
-                        // Style total row
+                        
                         var totalRange = worksheet.Range(row, 1, row, 6);
                         totalRange.Style.Font.Bold = true;
                         totalRange.Style.Fill.BackgroundColor = XLColor.Yellow;
                         totalRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
-                        // Format currency untuk total
+                        
                         worksheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0";
                         worksheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0";
                         worksheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
@@ -338,7 +338,7 @@ namespace KasirCokro.Views.Admin
             }
         }
 
-        // Navigation Event Handlers
+        
         private void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
             var dashboard = new DashboardAdmin();
@@ -406,7 +406,7 @@ namespace KasirCokro.Views.Admin
 
             if (result == MessageBoxResult.Yes)
             {
-                // Navigate to Login page
+                
                 var loginWindow = new LoginWindow();
                 loginWindow.Show();
                 this.Close();
@@ -414,7 +414,7 @@ namespace KasirCokro.Views.Admin
         }
     }
 
-    // Data Model untuk Kas
+    
     public class KasData : INotifyPropertyChanged
     {
         private DateTime _tanggal;

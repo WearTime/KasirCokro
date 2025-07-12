@@ -8,7 +8,7 @@
         ResizeMode="CanResize">
 
     <Window.Resources>
-        <!-- Modern Button Style -->
+        
         <Style x:Key="ModernButton" TargetType="Button">
             <Setter Property="Background" Value="#007BFF"/>
             <Setter Property="Foreground" Value="White"/>
@@ -38,7 +38,7 @@
             </Setter>
         </Style>
 
-        <!-- Success Button Style -->
+        
         <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
             <Setter Property="Background" Value="#28A745"/>
             <Style.Triggers>
@@ -48,7 +48,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Danger Button Style -->
+        
         <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
             <Setter Property="Background" Value="#DC3545"/>
             <Style.Triggers>
@@ -58,7 +58,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Warning Button Style -->
+        
         <Style x:Key="WarningButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
             <Setter Property="Background" Value="#FFC107"/>
             <Setter Property="Foreground" Value="#212529"/>
@@ -69,7 +69,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Secondary Button Style -->
+        
         <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
             <Setter Property="Background" Value="#6C757D"/>
             <Style.Triggers>
@@ -79,7 +79,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Modern DataGrid Style -->
+        
         <Style x:Key="ModernDataGrid" TargetType="DataGrid">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="#DEE2E6"/>
@@ -93,7 +93,7 @@
             <Setter Property="ColumnWidth" Value="*"/>
         </Style>
 
-        <!-- DataGrid Header Style -->
+        
         <Style x:Key="ModernDataGridColumnHeader" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#F8F9FA"/>
             <Setter Property="Foreground" Value="#495057"/>
@@ -104,7 +104,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
 
-        <!-- DataGrid Row Style -->
+        
         <Style x:Key="ModernDataGridRow" TargetType="DataGridRow">
             <Setter Property="Padding" Value="0,8"/>
             <Style.Triggers>
@@ -114,7 +114,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- DataGrid Cell Style -->
+        
         <Style x:Key="ModernDataGridCell" TargetType="DataGridCell">
             <Setter Property="Padding" Value="12,12"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -130,7 +130,7 @@
             </Setter>
         </Style>
 
-        <!-- Card Style -->
+        
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -142,7 +142,7 @@
             </Setter>
         </Style>
 
-        <!-- Status Badge Style -->
+        
         <Style x:Key="StatusBadgeStyle" TargetType="Border">
             <Setter Property="Background" Value="#FFC107"/>
             <Setter Property="CornerRadius" Value="20"/>
@@ -151,7 +151,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
-        <!-- Modern TextBox Style -->
+        
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="#DEE2E6"/>
@@ -241,7 +241,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Customer Info Card -->
+                
                 <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0,0,0,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -273,7 +273,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Items Card -->
+                
                 <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,20">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -354,7 +354,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Payment Info Card -->
+                
                 <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="0,0,0,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -362,7 +362,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Payment Information -->
+                        
                         <StackPanel Grid.Column="0" Margin="0,0,32,0">
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                                 <TextBlock Text="💳 Informasi Pembayaran" FontSize="18" FontWeight="Bold" Foreground="#212529"/>
@@ -387,14 +387,14 @@
                             </Grid>
                         </StackPanel>
 
-                        <!-- Payment History -->
+                        
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="📊 Riwayat Pembayaran" FontSize="18" FontWeight="Bold" Foreground="#212529" Margin="0,0,0,16"/>
 
                             <Border Background="#F8F9FA" CornerRadius="8" Padding="16" MaxHeight="300">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel x:Name="PaymentHistoryPanel">
-                                        <!-- Payment history akan di-generate secara dinamis oleh kode C# -->
+                                        
                                     </StackPanel>
                                 </ScrollViewer>
                             </Border>

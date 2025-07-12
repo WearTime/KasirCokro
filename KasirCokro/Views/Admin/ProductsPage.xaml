@@ -8,7 +8,7 @@
         WindowState="Maximized">
 
 	<Window.Resources>
-		<!-- Sidebar Button Style -->
+		
 		<Style x:Key="SidebarButton" TargetType="Button">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="Foreground" Value="#64748B"/>
@@ -40,7 +40,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Active Sidebar Button Style -->
+		
 		<Style x:Key="ActiveSidebarButton" TargetType="Button" BasedOn="{StaticResource SidebarButton}">
 			<Setter Property="Background" Value="#3B82F6"/>
 			<Setter Property="Foreground" Value="White"/>
@@ -52,7 +52,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Compact Button Style -->
+		
 		<Style x:Key="CompactButton" TargetType="Button">
 			<Setter Property="Background" Value="#007BFF"/>
 			<Setter Property="Foreground" Value="White"/>
@@ -80,7 +80,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Secondary Compact Button -->
+		
 		<Style x:Key="SecondaryCompactButton" TargetType="Button" BasedOn="{StaticResource CompactButton}">
 			<Setter Property="Background" Value="#6C757D"/>
 			<Style.Triggers>
@@ -90,7 +90,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Success Compact Button -->
+		
 		<Style x:Key="SuccessCompactButton" TargetType="Button" BasedOn="{StaticResource CompactButton}">
 			<Setter Property="Background" Value="#28A745"/>
 			<Style.Triggers>
@@ -100,7 +100,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Icon Button Style -->
+		
 		<Style x:Key="IconButton" TargetType="Button">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="BorderThickness" Value="0"/>
@@ -127,7 +127,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Edit Icon Button -->
+		
 		<Style x:Key="EditIconButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
 			<Style.Triggers>
 				<Trigger Property="IsMouseOver" Value="True">
@@ -136,7 +136,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Delete Icon Button -->
+		
 		<Style x:Key="DeleteIconButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
 			<Style.Triggers>
 				<Trigger Property="IsMouseOver" Value="True">
@@ -145,7 +145,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Compact TextBox Style -->
+		
 		<Style x:Key="CompactTextBox" TargetType="TextBox">
 			<Setter Property="Padding" Value="10,8"/>
 			<Setter Property="BorderBrush" Value="#DEE2E6"/>
@@ -172,7 +172,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Modern DataGrid Style -->
+		
 		<Style x:Key="ModernDataGrid" TargetType="DataGrid">
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="BorderBrush" Value="#DEE2E6"/>
@@ -185,7 +185,7 @@
 			<Setter Property="FontSize" Value="13"/>
 		</Style>
 
-		<!-- DataGrid Header Style -->
+		
 		<Style x:Key="ModernDataGridColumnHeader" TargetType="DataGridColumnHeader">
 			<Setter Property="Background" Value="#F8F9FA"/>
 			<Setter Property="Foreground" Value="#495057"/>
@@ -197,7 +197,7 @@
 			<Setter Property="FontSize" Value="12"/>
 		</Style>
 
-		<!-- DataGrid Row Style -->
+		
 		<Style x:Key="ModernDataGridRow" TargetType="DataGridRow">
 			<Setter Property="Padding" Value="0,4"/>
 			<Style.Triggers>
@@ -207,7 +207,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- DataGrid Cell Style -->
+		
 		<Style x:Key="ModernDataGridCell" TargetType="DataGridCell">
 			<Setter Property="Padding" Value="12,8"/>
 			<Setter Property="BorderThickness" Value="0"/>
@@ -223,7 +223,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Center DataGrid Cell Style -->
+		
 		<Style x:Key="CenterDataGridCell" TargetType="DataGridCell">
 			<Setter Property="Padding" Value="12,8"/>
 			<Setter Property="BorderThickness" Value="0"/>
@@ -239,7 +239,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Compact Card Style -->
+		
 		<Style x:Key="CompactCardStyle" TargetType="Border">
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="CornerRadius" Value="8"/>
@@ -253,12 +253,12 @@
 	</Window.Resources>
 
 	<Grid>
-		<!-- Sidebar -->
+		
 		<Border Background="White" Width="240" HorizontalAlignment="Left"
                 BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
 			<ScrollViewer VerticalScrollBarVisibility="Auto">
 				<StackPanel Margin="0,16,0,0">
-					<!-- Logo/Brand -->
+					
 					<StackPanel Margin="16,0,16,20">
 						<StackPanel Orientation="Horizontal">
 							<Border Background="#3B82F6" CornerRadius="6" Width="28" Height="28" Margin="0,0,10,0">
@@ -271,7 +271,7 @@
 						</StackPanel>
 					</StackPanel>
 
-					<!-- Main Navigation Menu -->
+					
 					<StackPanel Margin="0,0,0,16">
 						<TextBlock Text="MAIN" FontSize="10" FontWeight="SemiBold"
                                    Foreground="#9CA3AF" Margin="16,0,16,8"/>
@@ -319,7 +319,7 @@
 						</Button>
 					</StackPanel>
 
-					<!-- Reports Section -->
+					
 					<StackPanel Margin="0,0,0,16">
 						<TextBlock Text="LAPORAN" FontSize="10" FontWeight="SemiBold"
                                    Foreground="#9CA3AF" Margin="16,0,16,8"/>
@@ -353,7 +353,7 @@
 						</Button>
 					</StackPanel>
 
-					<!-- User Section -->
+					
 					<Border Background="#F8FAFC" CornerRadius="8" Margin="16,0,16,16" Padding="12">
 						<StackPanel>
 							<StackPanel Orientation="Horizontal" Margin="0,0,0,6">
@@ -371,9 +371,9 @@
 				</StackPanel>
 			</ScrollViewer>
 		</Border>
-		<!-- Main Content -->
+		
 		<Grid Margin="240,0,0,0">
-			<!-- Top Bar -->
+			
 			<Border Background="White" Height="60" VerticalAlignment="Top"
                     BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
 				<Grid Margin="20,0">
@@ -384,7 +384,7 @@
 				</Grid>
 			</Border>
 
-			<!-- Dashboard Content -->
+			
 			<ScrollViewer Margin="0,60,0,0" VerticalScrollBarVisibility="Auto">
 				<Grid Margin="16">
 					<Grid.RowDefinitions>
@@ -395,7 +395,7 @@
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 
-					<!-- Header Section -->
+					
 					<Border Grid.Row="0" Style="{StaticResource CompactCardStyle}" Margin="0,0,0,12">
 						<Grid>
 							<Grid.ColumnDefinitions>
@@ -422,7 +422,7 @@
 						</Grid>
 					</Border>
 
-					<!-- Search Section -->
+					
 					<Border Grid.Row="1" Style="{StaticResource CompactCardStyle}" Margin="0,0,0,12">
 						<Grid>
 							<Grid.ColumnDefinitions>
@@ -453,7 +453,7 @@
 						</Grid>
 					</Border>
 
-					<!-- Stats Cards -->
+					
 					<Grid Grid.Row="2" Margin="0,0,0,12">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
@@ -461,7 +461,7 @@
 							<ColumnDefinition Width="*"/>
 						</Grid.ColumnDefinitions>
 
-						<!-- Total Products Card -->
+						
 						<Border Grid.Column="0" Style="{StaticResource CompactCardStyle}" Margin="0,0,4,0">
 							<StackPanel>
 								<TextBlock Text="📦" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,4"/>
@@ -471,7 +471,7 @@
 							</StackPanel>
 						</Border>
 
-						<!-- Low Stock Card -->
+						
 						<Border Grid.Column="1" Style="{StaticResource CompactCardStyle}" Margin="4,0,4,0">
 							<StackPanel>
 								<TextBlock Text="⚠️" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,4"/>
@@ -481,7 +481,7 @@
 							</StackPanel>
 						</Border>
 
-						<!-- Out of Stock Card -->
+						
 						<Border Grid.Column="2" Style="{StaticResource CompactCardStyle}" Margin="4,0,0,0">
 							<StackPanel>
 								<TextBlock Text="❌" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,4"/>
@@ -492,8 +492,8 @@
 						</Border>
 					</Grid>
 
-					<!-- Data Table Section -->
-					<!-- Data Table Section -->
+					
+					
 					<Border Grid.Row="3" Style="{StaticResource CompactCardStyle}">
 						<ScrollViewer HorizontalScrollBarVisibility="Auto"
                   VerticalScrollBarVisibility="Auto"
@@ -513,7 +513,7 @@
 									<DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="120" />
 									<DataGridTextColumn Header="Nama Produk" Binding="{Binding NamaProduk}" Width="250" />
 
-									<!-- Harga Beli -->
+									
 									<DataGridTemplateColumn Header="Harga Beli" Width="80">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -525,7 +525,7 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Harga Jual -->
+									
 									<DataGridTemplateColumn Header="Harga Jual" Width="80">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -537,7 +537,7 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Mark Up -->
+									
 									<DataGridTemplateColumn Header="Mark Up" Width="80">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -549,7 +549,7 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Stok Awal -->
+									
 									<DataGridTemplateColumn Header="Stok Awal" Width="80">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -561,7 +561,7 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Stok Saat Ini -->
+									
 									<DataGridTemplateColumn Header="Stok Saat Ini" Width="90">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -602,7 +602,7 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Pendapatan -->
+									
 									<DataGridTemplateColumn Header="Pendapatan" Width="90">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -614,7 +614,7 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Laba -->
+									
 									<DataGridTemplateColumn Header="Laba" Width="80">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -626,7 +626,7 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Harta -->
+									
 									<DataGridTemplateColumn Header="Harta" Width="80">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -638,7 +638,7 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Persentase -->
+									
 									<DataGridTemplateColumn Header="Persentase" Width="90">
 										<DataGridTemplateColumn.CellStyle>
 											<Style BasedOn="{StaticResource CenterDataGridCell}" TargetType="DataGridCell"/>
@@ -652,10 +652,10 @@
 										</DataGridTemplateColumn.CellTemplate>
 									</DataGridTemplateColumn>
 
-									<!-- Supplier -->
+									
 									<DataGridTextColumn Header="Supplier" Binding="{Binding SupplierName}" Width="150" />
 
-									<!-- Aksi -->
+									
 									<DataGridTemplateColumn Header="Aksi" Width="120">
 										<DataGridTemplateColumn.CellTemplate>
 											<DataTemplate>
@@ -675,7 +675,7 @@
 						</ScrollViewer>
 					</Border>
 
-					<!-- Footer Section -->
+					
 					<Border Grid.Row="4" Style="{StaticResource CompactCardStyle}" Margin="0,12,0,0">
 						<Grid>
 							<Grid.ColumnDefinitions>

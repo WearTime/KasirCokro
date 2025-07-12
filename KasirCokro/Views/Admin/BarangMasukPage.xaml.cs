@@ -20,7 +20,7 @@ namespace KasirCokro.Views.Admin
             InitializeComponent();
             LoadDataBarangMasuk();
             UpdateTotalDisplay();
-            // Set focus ke textbox barcode
+            
             txtBarcode.Focus();
         }
 
@@ -82,12 +82,12 @@ namespace KasirCokro.Views.Admin
             {
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
-                    // Total hari ini
+                    
                     string queryTotal = "SELECT COALESCE(SUM(subtotal), 0) as total FROM transaction_in WHERE DATE(tgl) = CURDATE()";
                     MySqlCommand cmdTotal = new MySqlCommand(queryTotal, conn);
                     decimal totalHariIni = Convert.ToDecimal(cmdTotal.ExecuteScalar());
 
-                    // Total item hari ini
+                    
                     string queryItem = "SELECT COALESCE(SUM(qty), 0) as total_item FROM transaction_in WHERE DATE(tgl) = CURDATE()";
                     MySqlCommand cmdItem = new MySqlCommand(queryItem, conn);
                     int totalItem = Convert.ToInt32(cmdItem.ExecuteScalar());
@@ -112,7 +112,7 @@ namespace KasirCokro.Views.Admin
 
         private void TxtBarcode_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Auto search ketika panjang barcode mencapai 13 karakter (standar EAN-13)
+            
             if (txtBarcode.Text.Length >= 13)
             {
                 SearchProductByBarcode();
@@ -156,14 +156,14 @@ namespace KasirCokro.Views.Admin
                             NamaProduk = reader.GetString("nama_produk"),
                             HargaJual = reader.GetDecimal("harga_jual"),
                             Stok = reader.GetInt32("stok"),
-                            // Fixed: Properly handle nullable decimal
+                            
                             HargaBeli = reader.GetDecimal("harga_beli"),
                             SupplierId = reader.GetInt32("supplier_id"),
-                            // Create Supplier object properly
+                            
                             Supplier = new Models.Supplier
                             {
                                 Id = reader.GetInt32("supplier_id"),
-                                // Fixed: Properly handle nullable string
+                                
                                 NamaSupplier = reader.GetString("nama_supplier")
                             }
                         };
@@ -245,20 +245,20 @@ namespace KasirCokro.Views.Admin
         {
             try
             {
-                // Pastikan kontrol UI sudah diinisialisasi
+                
                 if (txtModalQuantity == null || txtModalHargaBeli == null || txtModalTotal == null)
                 {
-                    return; // Keluar jika kontrol belum siap
+                    return; 
                 }
 
-                // Pastikan text tidak kosong
+                
                 if (string.IsNullOrEmpty(txtModalQuantity.Text) || string.IsNullOrEmpty(txtModalHargaBeli.Text))
                 {
                     txtModalTotal.Text = "Rp 0";
                     return;
                 }
 
-                // Parse dengan validasi
+                
                 if (int.TryParse(txtModalQuantity.Text, out int qty) &&
                     decimal.TryParse(txtModalHargaBeli.Text, out decimal harga))
                 {
@@ -272,7 +272,7 @@ namespace KasirCokro.Views.Admin
             }
             catch (Exception ex)
             {
-                // Log error untuk debugging
+                
                 System.Diagnostics.Debug.WriteLine($"Error in UpdateModalTotal: {ex.Message}");
                 if (txtModalTotal != null)
                 {
@@ -340,7 +340,7 @@ namespace KasirCokro.Views.Admin
             {
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
-                    // Generate kode transaksi
+                    
                     string kodeTransaksi = GenerateKodeTransaksi();
 
                     int qty = int.Parse(txtModalQuantity.Text);
@@ -349,7 +349,7 @@ namespace KasirCokro.Views.Admin
                     string payment = chkKredit.IsChecked == true ? "kredit" : "tunai";
                     string supplier = chkKredit.IsChecked == true ? txtModalSupplierKredit.Text.Trim() : selectedProduct.Supplier.NamaSupplier;
 
-                    // Insert ke transaction_in
+                    
                     string queryInsert = @"
                         INSERT INTO transaction_in 
                         (kode_transaksi, tgl, no_faktur, kode_product, nama, qty, suplier, payment, harga, subtotal, retur) 
@@ -359,7 +359,7 @@ namespace KasirCokro.Views.Admin
                     MySqlCommand cmdInsert = new MySqlCommand(queryInsert, conn);
                     cmdInsert.Parameters.AddWithValue("@kode_transaksi", kodeTransaksi);
                     cmdInsert.Parameters.AddWithValue("@tgl", DateTime.Now);
-                    cmdInsert.Parameters.AddWithValue("@no_faktur", kodeTransaksi); // Menggunakan kode transaksi sebagai no faktur
+                    cmdInsert.Parameters.AddWithValue("@no_faktur", kodeTransaksi); 
                     cmdInsert.Parameters.AddWithValue("@kode_product", selectedProduct.Barcode);
                     cmdInsert.Parameters.AddWithValue("@nama", selectedProduct.NamaProduk);
                     cmdInsert.Parameters.AddWithValue("@qty", qty);
@@ -370,7 +370,7 @@ namespace KasirCokro.Views.Admin
 
                     cmdInsert.ExecuteNonQuery();
 
-                    // Update stok produk
+                    
                     string queryUpdateStok = "UPDATE products SET stok = stok + @qty WHERE barcode = @barcode";
                     MySqlCommand cmdUpdateStok = new MySqlCommand(queryUpdateStok, conn);
                     cmdUpdateStok.Parameters.AddWithValue("@qty", qty);
@@ -379,11 +379,11 @@ namespace KasirCokro.Views.Admin
 
                     MessageBox.Show("Barang masuk berhasil ditambahkan!", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // Refresh data
+                    
                     LoadDataBarangMasuk();
                     UpdateTotalDisplay();
 
-                    // Close modal dan reset
+                    
                     modalOverlay.Visibility = Visibility.Collapsed;
                     txtBarcode.Text = "";
                     txtBarcode.Focus();
@@ -400,7 +400,7 @@ namespace KasirCokro.Views.Admin
             return "TI" + DateTime.Now.ToString("yyyyMMddHHmmss");
         }
 
-        // Tambahkan method ini ke dalam class BarangMasukPage
+        
 
         private void BtnCariManual_Click(object sender, RoutedEventArgs e)
         {
@@ -409,7 +409,7 @@ namespace KasirCokro.Views.Admin
 
         private void ShowManualInputModal()
         {
-            // Reset form
+            
             txtManualBarcode.Text = "";
             txtManualNamaProduk.Text = "";
             txtManualStok.Text = "";
@@ -446,7 +446,7 @@ namespace KasirCokro.Views.Admin
                     decimal.TryParse(txtManualHargaJual.Text, out decimal hargaJual) &&
                     hargaBeli > 0)
                 {
-                    // Calculate percentage markup: ((Harga Jual - Harga Beli) / Harga Beli) * 100
+                    
                     decimal percentage = ((hargaJual - hargaBeli) / hargaBeli) * 100;
                     txtManualPercntage.Text = Math.Round(percentage, 2).ToString() + "%";
                 }
@@ -465,20 +465,20 @@ namespace KasirCokro.Views.Admin
         {
             try
             {
-                // Pastikan kontrol UI sudah diinisialisasi
+                
                 if (txtManualQuantity == null || txtManualHargaBeli == null || txtManualTotal == null)
                 {
                     return;
                 }
 
-                // Pastikan text tidak kosong
+                
                 if (string.IsNullOrEmpty(txtManualQuantity.Text) || string.IsNullOrEmpty(txtManualHargaBeli.Text))
                 {
                     txtManualTotal.Text = "Rp 0";
                     return;
                 }
 
-                // Parse dengan validasi
+                
                 if (int.TryParse(txtManualQuantity.Text, out int qty) &&
                     decimal.TryParse(txtManualHargaBeli.Text, out decimal harga))
                 {
@@ -528,7 +528,7 @@ namespace KasirCokro.Views.Admin
 
         private bool ValidateManualModalInput()
         {
-            // Validasi Barcode
+            
             if (string.IsNullOrEmpty(txtManualBarcode.Text.Trim()))
             {
                 MessageBox.Show("Barcode harus diisi.");
@@ -536,7 +536,7 @@ namespace KasirCokro.Views.Admin
                 return false;
             }
 
-            // Validasi Nama Produk
+            
             if (string.IsNullOrEmpty(txtManualNamaProduk.Text.Trim()))
             {
                 MessageBox.Show("Nama produk harus diisi.");
@@ -545,7 +545,7 @@ namespace KasirCokro.Views.Admin
             }
 
 
-            // Validasi Stok
+            
             if (string.IsNullOrEmpty(txtManualStok.Text) || !int.TryParse(txtManualStok.Text, out int stok) || stok < 0)
             {
                 MessageBox.Show("Stok harus berupa angka positif atau nol.");
@@ -560,7 +560,7 @@ namespace KasirCokro.Views.Admin
                 return false;
             }
 
-            // Validasi Supplier
+            
             if (txtManualSupplier.SelectedValue == null)
             {
                 MessageBox.Show("Supplier harus diisi.");
@@ -568,7 +568,7 @@ namespace KasirCokro.Views.Admin
                 return false;
             }
 
-            // Validasi Quantity
+            
             if (string.IsNullOrEmpty(txtManualQuantity.Text) || !int.TryParse(txtManualQuantity.Text, out int qty) || qty <= 0)
             {
                 MessageBox.Show("Quantity harus berupa angka positif.");
@@ -576,7 +576,7 @@ namespace KasirCokro.Views.Admin
                 return false;
             }
 
-            // Validasi Harga Beli
+            
             if (string.IsNullOrEmpty(txtManualHargaBeli.Text) || !decimal.TryParse(txtManualHargaBeli.Text, out decimal harga) || harga <= 0)
             {
                 MessageBox.Show("Harga beli harus berupa angka positif.");
@@ -620,7 +620,7 @@ namespace KasirCokro.Views.Admin
 
 
 
-            // Validasi Supplier Kredit
+            
             if (chkManualKredit.IsChecked == true && string.IsNullOrEmpty(txtManualSupplierKredit.Text.Trim()))
             {
                 MessageBox.Show("Nama supplier harus diisi untuk pembelian kredit.");
@@ -666,7 +666,7 @@ namespace KasirCokro.Views.Admin
             {
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
-                    // Cek apakah produk sudah ada
+                    
                     string checkQuery = "SELECT COUNT(*) FROM products WHERE barcode = @barcode";
                     MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn);
                     checkCmd.Parameters.AddWithValue("@barcode", txtManualBarcode.Text.Trim());
@@ -680,7 +680,7 @@ namespace KasirCokro.Views.Admin
                     int supplierId = (int)txtManualSupplier.SelectedValue;
                     if (productExists == 0)
                     {
-                        // Insert produk baru jika belum ada
+                        
                         string insertProductQuery = @"
                     INSERT INTO products 
                     (barcode, nama_produk, harga_jual, stok, stok_awal, supplier_id, harga_beli, mark_up, pendapatan, laba, harta, persentase, created_at, updated_at) 
@@ -699,12 +699,12 @@ namespace KasirCokro.Views.Admin
                         insertProductCmd.Parameters.AddWithValue("@pendapatan", decimal.Parse(txtManualPendapatan.Text));
                         insertProductCmd.Parameters.AddWithValue("@laba", decimal.Parse(txtManualLaba.Text));
                         insertProductCmd.Parameters.AddWithValue("@harta", decimal.Parse(txtManualHarta.Text));
-                        insertProductCmd.Parameters.AddWithValue("@pesentase", persentase); // Convert percentage to decimal
+                        insertProductCmd.Parameters.AddWithValue("@pesentase", persentase); 
 
                         insertProductCmd.ExecuteNonQuery();
                     }
 
-                    // Generate kode transaksi
+                    
                     string kodeTransaksi = GenerateKodeTransaksi();
 
                     int qty = int.Parse(txtManualQuantity.Text);
@@ -713,7 +713,7 @@ namespace KasirCokro.Views.Admin
                     string payment = chkManualKredit.IsChecked == true ? "kredit" : "tunai";
                     string supplier = chkManualKredit.IsChecked == true ? txtManualSupplierKredit.Text.Trim() : txtManualSupplier.Text.Trim();
 
-                    // Insert ke transaction_in
+                    
                     string queryInsert = @"
                 INSERT INTO transaction_in 
                 (kode_transaksi, tgl, no_faktur, kode_product, nama, qty, suplier, payment, harga, subtotal, retur) 
@@ -734,7 +734,7 @@ namespace KasirCokro.Views.Admin
 
                     cmdInsert.ExecuteNonQuery();
 
-                    // Update stok produk
+                    
                     string queryUpdateStok = "UPDATE products SET stok = stok + @qty WHERE barcode = @barcode";
                     MySqlCommand cmdUpdateStok = new MySqlCommand(queryUpdateStok, conn);
                     cmdUpdateStok.Parameters.AddWithValue("@qty", qty);
@@ -743,11 +743,11 @@ namespace KasirCokro.Views.Admin
 
                     MessageBox.Show("Barang masuk berhasil ditambahkan!", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // Refresh data
+                    
                     LoadDataBarangMasuk();
                     UpdateTotalDisplay();
 
-                    // Close modal dan reset
+                    
                     modalManualOverlay.Visibility = Visibility.Collapsed;
                     txtBarcode.Focus();
                 }
@@ -758,7 +758,7 @@ namespace KasirCokro.Views.Admin
             }
         }
 
-        // Event handlers untuk manual input
+        
         private void TxtManualQuantity_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateManualModalTotal();
@@ -804,12 +804,12 @@ namespace KasirCokro.Views.Admin
                 {
                     var worksheet = workbook.Worksheets.Add("Barang Masuk");
 
-                    // Header
+                    
                     worksheet.Cell(1, 1).Value = $"Laporan Barang Masuk - {DateTime.Now:dd/MM/yyyy}";
                     worksheet.Cell(1, 1).Style.Font.Bold = true;
                     worksheet.Cell(1, 1).Style.Font.FontSize = 16;
 
-                    // Column headers
+                    
                     worksheet.Cell(3, 1).Value = "No.";
                     worksheet.Cell(3, 2).Value = "Waktu";
                     worksheet.Cell(3, 3).Value = "Barcode";
@@ -820,13 +820,13 @@ namespace KasirCokro.Views.Admin
                     worksheet.Cell(3, 8).Value = "Total";
                     worksheet.Cell(3, 9).Value = "Status";
 
-                    // Style header
+                    
                     var headerRange = worksheet.Range(3, 1, 3, 9);
                     headerRange.Style.Font.Bold = true;
                     headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
                     headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 
-                    // Data
+                    
                     int row = 4;
                     for (int i = 0; i < barangMasuk.Count; i++)
                     {
@@ -842,17 +842,17 @@ namespace KasirCokro.Views.Admin
                         worksheet.Cell(row + i, 9).Value = item.IsKredit ? "Kredit" : "Tunai";
                     }
 
-                    // Format currency columns
+                    
                     var hargaBeliRange = worksheet.Range(4, 7, row + barangMasuk.Count - 1, 7);
                     hargaBeliRange.Style.NumberFormat.Format = "#,##0";
 
                     var totalRange = worksheet.Range(4, 8, row + barangMasuk.Count - 1, 8);
                     totalRange.Style.NumberFormat.Format = "#,##0";
 
-                    // Auto fit columns
+                    
                     worksheet.ColumnsUsed().AdjustToContents();
 
-                    // Add borders to data
+                    
                     var dataRange = worksheet.Range(3, 1, row + barangMasuk.Count - 1, 9);
                     dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
                     dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
@@ -867,10 +867,10 @@ namespace KasirCokro.Views.Admin
                 MessageBox.Show("Gagal mengekspor ke Excel: " + ex.Message);
             }
         }
-        // Event handlers untuk quantity dan harga beli textbox
+        
         private void TxtModalQuantity_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Pastikan semua kontrol sudah siap sebelum update
+            
             if (IsLoaded && txtModalHargaBeli != null && txtModalTotal != null)
             {
                 UpdateModalTotal();
@@ -878,14 +878,14 @@ namespace KasirCokro.Views.Admin
         }
         private void TxtModalHargaBeli_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Pastikan semua kontrol sudah siap sebelum update
+            
             if (IsLoaded && txtModalQuantity != null && txtModalTotal != null)
             {
                 UpdateModalTotal();
             }
         }
 
-        // Navigation methods
+        
         private void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
             Views.Admin.DashboardAdmin dashboard = new Views.Admin.DashboardAdmin();
@@ -936,7 +936,7 @@ namespace KasirCokro.Views.Admin
 
         private void TransactionKeluar_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to Transaction Keluar page
+            
             var transactionKeluarWindow = new TransactionKeluarPage();
             transactionKeluarWindow.Show();
             this.Close();
@@ -962,7 +962,7 @@ namespace KasirCokro.Views.Admin
         }
     }
 
-    // Model untuk data barang masuk
+    
     public class BarangMasuk
     {
         public int Id { get; set; }
@@ -976,7 +976,7 @@ namespace KasirCokro.Views.Admin
         public bool IsKredit { get; set; }
     }
 
-    // Model untuk Supplier (jika belum ada)
+    
     public class Supplier
     {
         public int Id { get; set; }

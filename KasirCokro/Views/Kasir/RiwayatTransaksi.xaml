@@ -5,7 +5,7 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <!-- Sidebar Button Style -->
+        
         <Style x:Key="SidebarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#64748B"/>
@@ -37,7 +37,7 @@
             </Setter>
         </Style>
 
-        <!-- Active Sidebar Button Style -->
+        
         <Style x:Key="ActiveSidebarButton" TargetType="Button" BasedOn="{StaticResource SidebarButton}">
             <Setter Property="Background" Value="#3B82F6"/>
             <Setter Property="Foreground" Value="White"/>
@@ -49,7 +49,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Card Style -->
+        
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -61,7 +61,7 @@
             </Setter>
         </Style>
 
-        <!-- Header Text Style -->
+        
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="32"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -69,14 +69,14 @@
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
-        <!-- Subtitle Text Style -->
+        
         <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Foreground" Value="#6B7280"/>
             <Setter Property="FontWeight" Value="Medium"/>
         </Style>
 
-        <!-- Primary Button Style -->
+        
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#3B82F6"/>
             <Setter Property="Foreground" Value="White"/>
@@ -104,7 +104,7 @@
             </Setter>
         </Style>
 
-        <!-- Secondary Button Style -->
+        
         <Style x:Key="SecondaryButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#F8FAFC"/>
             <Setter Property="Foreground" Value="#64748B"/>
@@ -136,7 +136,7 @@
             </Setter>
         </Style>
 
-        <!-- DataGrid Style -->
+        
         <Style x:Key="ModernDataGrid" TargetType="DataGrid">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -154,7 +154,7 @@
             <Setter Property="FontSize" Value="14"/>
         </Style>
 
-        <!-- DataGrid Header Style -->
+        
         <Style x:Key="ModernDataGridColumnHeader" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#F1F5F9"/>
             <Setter Property="Foreground" Value="#374151"/>
@@ -166,7 +166,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
 
-        <!-- DataGrid Cell Style -->
+        
         <Style x:Key="ModernDataGridCell" TargetType="DataGridCell">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="16,12"/>
@@ -181,11 +181,11 @@
     </Window.Resources>
 
     <Grid>
-        <!-- Sidebar -->
+        
         <Border Background="White" Width="280" HorizontalAlignment="Left" 
                 BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
             <StackPanel Margin="0,24,0,0">
-                <!-- Logo/Brand -->
+                
                 <StackPanel Margin="24,0,24,32" Orientation="Horizontal">
                     <Border Background="#3B82F6" CornerRadius="8" Width="36" Height="36" Margin="0,0,12,0">
                         <TextBlock Text="K" FontSize="18" FontWeight="Bold" Foreground="White" 
@@ -197,7 +197,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Navigation Menu -->
+                
                 <StackPanel>
                     <Button Style="{StaticResource SidebarButton}" Content="🏠 Dashboard" Click="BtnDashboard_Click"/>
                     <Button Style="{StaticResource SidebarButton}" Content="🛒 Transaksi" Click="BtnTransaksi_Click"/>
@@ -206,7 +206,7 @@
 
                 </StackPanel>
 
-                <!-- User Section -->
+                
                 <StackPanel Margin="24,48,24,24" VerticalAlignment="Bottom">
                     <Border Background="#F8FAFC" CornerRadius="12" Padding="16">
                         <StackPanel Orientation="Horizontal">
@@ -226,11 +226,11 @@
             </StackPanel>
         </Border>
 
-        <!-- Main Content Area -->
+        
         <Grid Margin="280,0,0,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32">
                 <StackPanel>
-                    <!-- Header Section -->
+                    
                     <Grid Margin="0,0,0,32">
                         <StackPanel HorizontalAlignment="Left">
                             <TextBlock Style="{StaticResource HeaderTextStyle}" Text="Riwayat Transaksi"/>
@@ -246,7 +246,7 @@
 
                     
 
-                    <!-- Statistics Cards -->
+                    
                     <Grid Margin="0,0,0,24">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -255,7 +255,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Total Transaksi -->
+                        
                         <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
@@ -271,7 +271,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Total Penjualan -->
+                        
                         <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="6,0,6,0">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
@@ -287,7 +287,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Rata-rata per Transaksi -->
+                        
                         <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="6,0,6,0">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
@@ -306,7 +306,7 @@
                         
                     </Grid>
 
-                    <!-- Transaction History Table -->
+                    
                     <Border Style="{StaticResource CardStyle}">
                         <StackPanel>
                             <TextBlock Text="Daftar Transaksi" FontSize="20" FontWeight="Bold" 
@@ -327,7 +327,7 @@
                                 </DataGrid.Columns>
                             </DataGrid>
 
-                            <!-- Pagination -->
+                            
                             <Grid Margin="0,20,0,0">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                     <TextBlock x:Name="txtShowingInfo" Text="Menampilkan data" FontSize="14" 

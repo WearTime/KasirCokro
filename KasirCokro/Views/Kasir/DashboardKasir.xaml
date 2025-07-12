@@ -8,7 +8,7 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <!-- Sidebar Button Style -->
+        
         <Style x:Key="SidebarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#64748B"/>
@@ -40,7 +40,7 @@
             </Setter>
         </Style>
 
-        <!-- Active Sidebar Button Style -->
+        
         <Style x:Key="ActiveSidebarButton" TargetType="Button" BasedOn="{StaticResource SidebarButton}">
             <Setter Property="Background" Value="#3B82F6"/>
             <Setter Property="Foreground" Value="White"/>
@@ -52,7 +52,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Card Style -->
+        
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -64,7 +64,7 @@
             </Setter>
         </Style>
 
-        <!-- Header Text Style -->
+        
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="32"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -72,14 +72,14 @@
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
-        <!-- Subtitle Text Style -->
+        
         <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Foreground" Value="#6B7280"/>
             <Setter Property="FontWeight" Value="Medium"/>
         </Style>
 
-        <!-- Metric Label Style -->
+        
         <Style x:Key="MetricLabelStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#6B7280"/>
@@ -87,14 +87,14 @@
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
-        <!-- Metric Value Style -->
+        
         <Style x:Key="MetricValueStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="#111827"/>
         </Style>
 
-        <!-- Primary Button Style -->
+        
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#3B82F6"/>
             <Setter Property="Foreground" Value="White"/>
@@ -122,7 +122,7 @@
             </Setter>
         </Style>
 
-        <!-- Success Button Style -->
+        
         <Style x:Key="SuccessButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#10B981"/>
             <Setter Property="Foreground" Value="White"/>
@@ -150,7 +150,7 @@
             </Setter>
         </Style>
 
-        <!-- Orange Button Style -->
+        
         <Style x:Key="OrangeButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#F97316"/>
             <Setter Property="Foreground" Value="White"/>
@@ -179,7 +179,7 @@
             </Setter>
         </Style>
 
-        <!-- Purple Button Style -->
+        
         <Style x:Key="PurpleButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#A855F7"/>
             <Setter Property="Foreground" Value="White"/>
@@ -210,11 +210,11 @@
     </Window.Resources>
 
     <Grid>
-        <!-- Sidebar -->
+        
         <Border Background="White" Width="280" HorizontalAlignment="Left" 
                 BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
             <StackPanel Margin="0,24,0,0">
-                <!-- Logo/Brand -->
+                
                 <StackPanel Margin="24,0,24,32">
                     <StackPanel Orientation="Horizontal">
                         <Border Background="#10B981" CornerRadius="8" Width="32" Height="32" Margin="0,0,12,0">
@@ -227,7 +227,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Navigation Menu -->
+                
                 <StackPanel Margin="0,0,0,24">
                     <TextBlock Text="NAVIGATION" FontSize="11" FontWeight="SemiBold" 
                                Foreground="#9CA3AF" Margin="24,0,24,12"/>
@@ -254,7 +254,7 @@
                     </Button>
                 </StackPanel>
 
-                <!-- User Section -->
+                
                 <Border Background="#F8FAFC" CornerRadius="12" Margin="24,450,24,24" Padding="16">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
@@ -272,9 +272,9 @@
             </StackPanel>
         </Border>
 
-        <!-- Main Content -->
+        
         <Grid Margin="280,0,0,0">
-            <!-- Top Bar -->
+            
             <Border Background="White" Height="80" VerticalAlignment="Top" 
                     BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
                 <Grid Margin="32,0">
@@ -283,14 +283,14 @@
                         <TextBlock Text="Selamat datang, siap melayani!" Style="{StaticResource SubtitleTextStyle}"/>
                     </StackPanel>
 
-                    <!-- Quick Action Button -->
+                    
                     <Button Content="🛒 Mulai Transaksi" Style="{StaticResource SuccessButtonStyle}"
                             HorizontalAlignment="Right" VerticalAlignment="Center"
                             Click="BtnTransaksi_Click"/>
                 </Grid>
             </Border>
 
-            <!-- Dashboard Content -->
+            
             <ScrollViewer Margin="0,80,0,0" VerticalScrollBarVisibility="Auto">
                 <Grid Margin="32">
                     <Grid.RowDefinitions>
@@ -299,9 +299,9 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Metrics Cards -->
+                    
                     <UniformGrid Grid.Row="0" Columns="3" Margin="0,0,0,32">
-                        <!-- Transaksi Hari Ini -->
+                        
                         <Border Style="{StaticResource CardStyle}" Margin="0,0,16,0">
                             <StackPanel>
                                 <Grid>
@@ -319,7 +319,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Penjualan Hari Ini -->
+                        
                         <Border Style="{StaticResource CardStyle}" Margin="8,0">
                             <StackPanel>
                                 <Grid>
@@ -337,7 +337,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Rata-rata per Transaksi -->
+                        
                         <Border Style="{StaticResource CardStyle}" Margin="16,0,0,0">
                             <StackPanel>
                                 <Grid>
@@ -356,7 +356,7 @@
                         </Border>
                     </UniformGrid>
 
-                    <!-- Chart Transaksi Harian -->
+                    
                     <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,32">
                         <StackPanel>
                             <Grid Margin="0,0,0,24">
@@ -377,14 +377,14 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Quick Actions -->
+                    
                     <Border Grid.Row="2" Style="{StaticResource CardStyle}">
                         <StackPanel>
                             <TextBlock Text="Quick Actions" FontSize="20" FontWeight="SemiBold"
                                        Foreground="#111827" Margin="0,0,0,24"/>
 
                             <UniformGrid Columns="2" Rows="2">
-                                <!-- Mulai Transaksi -->
+                                
                                 <Border Background="#F0FDF4" CornerRadius="12" Padding="24" Margin="0,0,8,8">
                                     <StackPanel>
                                         <Border Background="#10B981" CornerRadius="8" Width="48" Height="48" 
@@ -402,7 +402,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Lihat Riwayat -->
+                                
                                 <Border Background="#F8FAFC" CornerRadius="12" Padding="24" Margin="8,0,0,8">
                                     <StackPanel>
                                         <Border Background="#64748B" CornerRadius="8" Width="48" Height="48" 
@@ -419,7 +419,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Laporan Hari Ini -->
+                                
                                 <Border Background="#FEF7FF" CornerRadius="12" Padding="24" Margin="0,8,8,0">
                                     <StackPanel>
                                         <Border Background="#A855F7" CornerRadius="8" Width="48" Height="48" 
@@ -435,7 +435,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Bantuan -->
+                                
                                 <Border Background="#FFF7ED" CornerRadius="12" Padding="24" Margin="8,8,0,0">
                                     <StackPanel>
                                         <Border Background="#F97316" CornerRadius="8" Width="48" Height="48" 

@@ -15,9 +15,9 @@ using System.Windows.Shapes;
 
 namespace KasirCokro.Views.Admin
 {
-    /// <summary>
-    /// Interaction logic for AddPaymentHutang.xaml
-    /// </summary>
+
+
+
     public partial class AddPaymentHutang : Window
     {
         private string _kodeTransaksi;
@@ -29,7 +29,7 @@ namespace KasirCokro.Views.Admin
             _kodeTransaksi = kodeTransaksi;
             _sisaHutang = sisaHutang;
 
-            // Set maximum payment amount
+
             txtJumlahPembayaran.Text = sisaHutang.ToString("N0");
         }
 

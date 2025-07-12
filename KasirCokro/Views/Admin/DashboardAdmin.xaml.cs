@@ -25,14 +25,14 @@ namespace KasirCokro.Views.Admin
         {
             InitializeComponent();
 
-            // Load all dashboard data
+            
             LoadDashboardCards();
             LoadPenjualanChart();
             LoadKeuntunganChart();
             LoadStokKurang();
         }
 
-        // Method untuk memuat data ke 3 cards
+        
         private void LoadDashboardCards()
         {
             LoadPenjualanHariIni();
@@ -47,7 +47,7 @@ namespace KasirCokro.Views.Admin
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
                     
-                    // Query disesuaikan dengan struktur tabel transactions
+                    
                     string query = @"
                         SELECT COALESCE(SUM(subtotal), 0) AS total_penjualan 
                         FROM transactions 
@@ -74,7 +74,7 @@ namespace KasirCokro.Views.Admin
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
                     
-                    // Query disesuaikan dengan struktur tabel transactions
+                    
                     string query = @"
                         SELECT COALESCE(SUM(laba), 0) AS total_laba 
                         FROM transactions 
@@ -101,7 +101,7 @@ namespace KasirCokro.Views.Admin
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
                     
-                    // Query untuk menghitung total HPP hari ini
+                    
                     string query = @"
                         SELECT COALESCE(SUM(t.qty * p.harga_beli), 0) AS total_hpp
                         FROM transactions t
@@ -143,7 +143,7 @@ namespace KasirCokro.Views.Admin
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     var reader = cmd.ExecuteReader();
 
-                    // Initialize dengan jam 0-23
+                    
                     for (int i = 0; i < 24; i++)
                     {
                         labels.Add($"{i:00}:00");
@@ -291,7 +291,7 @@ namespace KasirCokro.Views.Admin
             }
         }
 
-        // Method untuk refresh data
+        
         public void RefreshDashboard()
         {
             LoadDashboardCards();
@@ -300,7 +300,7 @@ namespace KasirCokro.Views.Admin
             LoadStokKurang();
         }
 
-        // Event handler untuk refresh data button
+        
         private void RefreshData_Click(object sender, RoutedEventArgs e)
         {
             RefreshDashboard();
@@ -308,7 +308,7 @@ namespace KasirCokro.Views.Admin
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        // Event handler untuk logout button
+        
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Apakah Anda yakin ingin logout?",
@@ -322,7 +322,7 @@ namespace KasirCokro.Views.Admin
             }
         }
 
-        // Navigation event handlers
+        
         private void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
             Views.Admin.DashboardAdmin dashboard = new Views.Admin.DashboardAdmin();
@@ -373,7 +373,7 @@ namespace KasirCokro.Views.Admin
 
         private void TransactionKeluar_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to Transaction Keluar page
+            
             var transactionKeluarWindow = new TransactionKeluarPage();
             transactionKeluarWindow.Show();
             this.Close();
@@ -386,7 +386,7 @@ namespace KasirCokro.Views.Admin
             this.Close();
         }
 
-        // Class untuk binding data grid
+        
         public class ProdukStok
         {
             public string Barcode { get; set; }

@@ -7,7 +7,7 @@
         WindowState="Maximized">
 
 	<Window.Resources>
-		<!-- Sidebar Button Style -->
+		
 		<Style x:Key="SidebarButton" TargetType="Button">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="Foreground" Value="#64748B"/>
@@ -39,7 +39,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Active Sidebar Button Style -->
+		
 		<Style x:Key="ActiveSidebarButton" TargetType="Button" BasedOn="{StaticResource SidebarButton}">
 			<Setter Property="Background" Value="#3B82F6"/>
 			<Setter Property="Foreground" Value="White"/>
@@ -51,7 +51,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Modern Button Style -->
+		
 		<Style x:Key="ModernButton" TargetType="Button">
 			<Setter Property="Background" Value="#007BFF"/>
 			<Setter Property="Foreground" Value="White"/>
@@ -81,7 +81,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Secondary Button Style -->
+		
 		<Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
 			<Setter Property="Background" Value="#6C757D"/>
 			<Style.Triggers>
@@ -91,7 +91,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Success Button Style -->
+		
 		<Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
 			<Setter Property="Background" Value="#28A745"/>
 			<Style.Triggers>
@@ -101,7 +101,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Danger Button Style -->
+		
 		<Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
 			<Setter Property="Background" Value="#DC3545"/>
 			<Style.Triggers>
@@ -111,7 +111,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- Modern TextBox Style -->
+		
 		<Style x:Key="ModernTextBox" TargetType="TextBox">
 			<Setter Property="Padding" Value="12,10"/>
 			<Setter Property="BorderBrush" Value="#DEE2E6"/>
@@ -138,7 +138,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Modern DataGrid Style -->
+		
 		<Style x:Key="ModernDataGrid" TargetType="DataGrid">
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="BorderBrush" Value="#DEE2E6"/>
@@ -151,7 +151,7 @@
 			<Setter Property="FontSize" Value="14"/>
 		</Style>
 
-		<!-- DataGrid Header Style -->
+		
 		<Style x:Key="ModernDataGridColumnHeader" TargetType="DataGridColumnHeader">
 			<Setter Property="Background" Value="#F8F9FA"/>
 			<Setter Property="Foreground" Value="#495057"/>
@@ -162,7 +162,7 @@
 			<Setter Property="HorizontalContentAlignment" Value="Left"/>
 		</Style>
 
-		<!-- DataGrid Row Style -->
+		
 		<Style x:Key="ModernDataGridRow" TargetType="DataGridRow">
 			<Setter Property="Padding" Value="0,8"/>
 			<Style.Triggers>
@@ -172,7 +172,7 @@
 			</Style.Triggers>
 		</Style>
 
-		<!-- DataGrid Cell Style -->
+		
 		<Style x:Key="ModernDataGridCell" TargetType="DataGridCell">
 			<Setter Property="Padding" Value="12,12"/>
 			<Setter Property="BorderThickness" Value="0"/>
@@ -188,7 +188,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Card Style -->
+		
 		<Style x:Key="CardStyle" TargetType="Border">
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="CornerRadius" Value="12"/>
@@ -202,12 +202,12 @@
 	</Window.Resources>
 
 	<Grid>
-		<!-- Sidebar -->
+		
 		<Border Background="White" Width="240" HorizontalAlignment="Left"
                 BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
 			<ScrollViewer VerticalScrollBarVisibility="Auto">
 				<StackPanel Margin="0,16,0,0">
-					<!-- Logo/Brand -->
+					
 					<StackPanel Margin="16,0,16,20">
 						<StackPanel Orientation="Horizontal">
 							<Border Background="#3B82F6" CornerRadius="6" Width="28" Height="28" Margin="0,0,10,0">
@@ -220,7 +220,7 @@
 						</StackPanel>
 					</StackPanel>
 
-					<!-- Main Navigation Menu -->
+					
 					<StackPanel Margin="0,0,0,16">
 						<TextBlock Text="MAIN" FontSize="10" FontWeight="SemiBold"
                                    Foreground="#9CA3AF" Margin="16,0,16,8"/>
@@ -268,7 +268,7 @@
 						</Button>
 					</StackPanel>
 
-					<!-- Reports Section -->
+					
 					<StackPanel Margin="0,0,0,16">
 						<TextBlock Text="LAPORAN" FontSize="10" FontWeight="SemiBold"
                                    Foreground="#9CA3AF" Margin="16,0,16,8"/>
@@ -302,7 +302,7 @@
 						</Button>
 					</StackPanel>
 
-					<!-- User Section -->
+					
 					<Border Background="#F8FAFC" CornerRadius="8" Margin="16,0,16,16" Padding="12">
 						<StackPanel>
 							<StackPanel Orientation="Horizontal" Margin="0,0,0,6">
@@ -320,9 +320,9 @@
 				</StackPanel>
 			</ScrollViewer>
 		</Border>
-		<!-- Main Content -->
+		
 		<Grid Margin="240,0,0,0">
-			<!-- Top Bar -->
+			
 			<Border Background="White" Height="80" VerticalAlignment="Top"
                     BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
 				<Grid Margin="32,0">
@@ -333,7 +333,7 @@
 				</Grid>
 			</Border>
 
-			<!-- Dashboard Content -->
+			
 			<ScrollViewer Margin="0,80,0,0" VerticalScrollBarVisibility="Auto">
 				<Grid Margin="24">
 					<Grid.RowDefinitions>
@@ -344,7 +344,7 @@
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 
-					<!-- Header Section -->
+					
 					<Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0,0,0,20">
 						<Grid>
 							<Grid.ColumnDefinitions>
@@ -371,7 +371,7 @@
 						</Grid>
 					</Border>
 
-					<!-- Search Section -->
+					
 					<Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,20">
 						<Grid>
 							<Grid.ColumnDefinitions>
@@ -404,7 +404,7 @@
 
 
 
-					<!-- Data Table Section -->
+					
 					<Border Grid.Row="3" Style="{StaticResource CardStyle}">
 						<DataGrid x:Name="dgSupplier"
                                   Style="{StaticResource ModernDataGrid}"
@@ -436,7 +436,7 @@
 						</DataGrid>
 					</Border>
 
-					<!-- Footer Section -->
+					
 					<Border Grid.Row="4" Style="{StaticResource CardStyle}" Margin="0,20,0,0">
 						<Grid>
 							<Grid.ColumnDefinitions>

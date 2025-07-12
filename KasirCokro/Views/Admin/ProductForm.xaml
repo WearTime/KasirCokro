@@ -12,7 +12,7 @@
         ResizeMode="NoResize">
 
 	<Window.Resources>
-		<!-- Primary Button Style -->
+		
 		<Style x:Key="PrimaryButton" TargetType="Button">
 			<Setter Property="Background" Value="#3B82F6"/>
 			<Setter Property="Foreground" Value="White"/>
@@ -47,7 +47,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Secondary Button Style -->
+		
 		<Style x:Key="SecondaryButton" TargetType="Button">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="Foreground" Value="#6B7280"/>
@@ -79,7 +79,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Modern Input Style -->
+		
 		<Style x:Key="ModernInput" TargetType="TextBox">
 			<Setter Property="Height" Value="48"/>
 			<Setter Property="Padding" Value="16,12"/>
@@ -115,7 +115,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Modern ComboBox Style -->
+		
 		<Style x:Key="ModernComboBox" TargetType="ComboBox">
 			<Setter Property="Height" Value="48"/>
 			<Setter Property="Padding" Value="16,12"/>
@@ -228,7 +228,7 @@
 			<Setter Property="Margin" Value="0,0,0,8"/>
 		</Style>
 
-		<!-- Label Style -->
+		
 		<Style x:Key="InputLabel" TargetType="TextBlock">
 			<Setter Property="FontSize" Value="14"/>
 			<Setter Property="FontWeight" Value="Medium"/>
@@ -236,7 +236,7 @@
 			<Setter Property="Margin" Value="0,0,0,8"/>
 		</Style>
 
-		<!-- Modal Container Style -->
+		
 		<Style x:Key="ModalContainer" TargetType="Border">
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="CornerRadius" Value="20"/>
@@ -248,7 +248,7 @@
 			</Setter>
 		</Style>
 
-		<!-- Header Style -->
+		
 		<Style x:Key="HeaderText" TargetType="TextBlock">
 			<Setter Property="FontSize" Value="32"/>
 			<Setter Property="FontWeight" Value="Bold"/>
@@ -256,14 +256,14 @@
 			<Setter Property="Margin" Value="0,0,0,8"/>
 		</Style>
 
-		<!-- Subtitle Style -->
+		
 		<Style x:Key="SubtitleText" TargetType="TextBlock">
 			<Setter Property="FontSize" Value="16"/>
 			<Setter Property="Foreground" Value="#6B7280"/>
 			<Setter Property="Margin" Value="0,0,0,40"/>
 		</Style>
 
-		<!-- Close Button Style -->
+		
 		<Style x:Key="CloseButton" TargetType="Button">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="Foreground" Value="#6B7280"/>
@@ -295,9 +295,9 @@
 		</Style>
 	</Window.Resources>
 
-	<!-- Modal Overlay -->
+	
 	<Grid>
-		<!-- Modal Content -->
+		
 		<Border Style="{StaticResource ModalContainer}"
                 MaxWidth="900"
                 MaxHeight="800"
@@ -305,7 +305,7 @@
                 VerticalAlignment="Center">
 
 			<Grid>
-				<!-- Close Button -->
+				
 				<Button Content="×"
                         Style="{StaticResource CloseButton}"
                         HorizontalAlignment="Right"
@@ -313,16 +313,16 @@
                         Margin="0,-10,-10,0"
                         Click="BtnBatal_Click"/>
 
-				<!-- Form Content -->
+				
 				<ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled"
                               Margin="0,20,0,0">
 					<StackPanel>
-						<!-- Header Section -->
+						
 						<TextBlock Text="Form Produk" Style="{StaticResource HeaderText}"/>
 						<TextBlock Text="Tambah atau edit data produk dengan lengkap" Style="{StaticResource SubtitleText}"/>
 
-						<!-- Form Fields -->
+						
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
@@ -339,7 +339,7 @@
 								<RowDefinition Height="Auto"/>
 							</Grid.RowDefinitions>
 
-							<!-- Barcode Field -->
+							
 							<StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,20">
 								<TextBlock Text="Barcode" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtBarcode"
@@ -347,7 +347,7 @@
                                          ToolTip="Masukkan kode barcode produk"/>
 							</StackPanel>
 
-							<!-- Nama Produk Field -->
+							
 							<StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,20">
 								<TextBlock Text="Nama Produk" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtNamaProduk"
@@ -355,7 +355,7 @@
                                          ToolTip="Masukkan nama produk"/>
 							</StackPanel>
 
-							<!-- Supplier Field -->
+							
 							<StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,20">
 								<TextBlock Text="Supplier" Style="{StaticResource InputLabel}"/>
 								<ComboBox x:Name="cmbSupplier"
@@ -365,7 +365,7 @@
                                           ToolTip="Pilih supplier"/>
 							</StackPanel>
 
-							<!-- Harga Beli Field -->
+							
 							<StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,0,20">
 								<TextBlock Text="Harga Beli" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtHargaBeli"
@@ -374,7 +374,7 @@
                                          ToolTip="Masukkan harga beli produk"/>
 							</StackPanel>
 
-							<!-- Harga Jual Field -->
+							
 							<StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,0,20">
 								<TextBlock Text="Harga Jual" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtHargaJual"
@@ -383,7 +383,7 @@
                                          ToolTip="Masukkan harga jual produk"/>
 							</StackPanel>
 
-							<!-- Harga Jual Satuan Field -->
+							
 							<StackPanel Grid.Row="2" Grid.Column="2" Margin="0,0,0,20">
 								<TextBlock Text="Laba" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtLaba"
@@ -392,7 +392,7 @@
                                          ToolTip="Masukkan Laba"/>
 							</StackPanel>
 
-							<!-- Stok Field -->
+							
 							<StackPanel Grid.Row="3" Grid.Column="0" Margin="0,0,0,20">
 								<TextBlock Text="Stok" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtStok"
@@ -401,7 +401,7 @@
                                          ToolTip="Masukkan jumlah stok"/>
 							</StackPanel>
 
-							<!-- Stok Awal Field -->
+							
 							<StackPanel Grid.Row="3" Grid.Column="2" Margin="0,0,0,20">
 								<TextBlock Text="Stok Awal" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtStokAwal"
@@ -410,7 +410,7 @@
                                          ToolTip="Masukkan stok awal"/>
 							</StackPanel>
 
-							<!-- Mark Up Field -->
+							
 							<StackPanel Grid.Row="4" Grid.Column="0" Margin="0,0,0,20">
 								<TextBlock Text="Mark Up" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtMarkUp"
@@ -419,7 +419,7 @@
                                          ToolTip="Masukkan mark up"/>
 							</StackPanel>
 
-							<!-- Persentase Field -->
+							
 							<StackPanel Grid.Row="4" Grid.Column="2" Margin="0,0,0,20">
 								<TextBlock Text="Persentase" Style="{StaticResource ReadOnlyLabel}"/>
 								<TextBox x:Name="txtPersentase"
@@ -427,7 +427,7 @@
                                          ToolTip="Masukkan persentase"/>
 							</StackPanel>
 
-							<!-- Harta Field -->
+							
 							<StackPanel Grid.Row="5" Grid.Column="0" Margin="0,0,0,32">
 								<TextBlock Text="Harta" Style="{StaticResource InputLabel}"/>
 								<TextBox x:Name="txtHarta"
@@ -444,7 +444,7 @@
                                          ToolTip="Masukkan nilai pendapatan"/>
 							</StackPanel>
 
-							<!-- Action Buttons -->
+							
 							<StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"
                                         Orientation="Horizontal"
                                         HorizontalAlignment="Right"

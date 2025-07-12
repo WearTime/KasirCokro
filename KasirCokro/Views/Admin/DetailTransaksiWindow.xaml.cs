@@ -154,17 +154,17 @@ namespace KasirCokro.Views.Admin
 
         private void UpdatePaymentHistoryUI()
         {
-            // Find the payment history panel - adjust the name based on your XAML
+            
             var paymentHistoryPanel = FindName("PaymentHistoryPanel") as StackPanel;
             if (paymentHistoryPanel == null)
             {
                 var paymentHistoryGrid = FindName("dgPaymentHistory") as DataGrid;
                 if (paymentHistoryGrid != null)
                 {
-                    // Create a list to display ONLY payments from pembayaran table
+                    
                     var allPayments = new List<PaymentDisplayItem>();
 
-                    // Add ONLY payments from pembayaran table
+                    
                     foreach (var payment in _pembayaranHistory)
                     {
                         allPayments.Add(new PaymentDisplayItem
@@ -184,7 +184,7 @@ namespace KasirCokro.Views.Admin
             {
                 paymentHistoryPanel.Children.Clear();
 
-                // Add ONLY payments from pembayaran table
+                
                 foreach (var payment in _pembayaranHistory)
                 {
                     AddPaymentHistoryItem(paymentHistoryPanel, payment.TanggalPembayaran, payment.Tunai, false);
@@ -292,7 +292,7 @@ namespace KasirCokro.Views.Admin
 
             if (addPaymentWindow.ShowDialog() == true)
             {
-                // Reload data after payment added
+                
                 await LoadPembayaranHistory();
                 CalculateTotals();
                 UpdatePaymentHistoryUI();
@@ -351,7 +351,7 @@ namespace KasirCokro.Views.Admin
                             WHERE kode_transaksi = @kodeTransaksi 
                                 AND kode_product = @kodeProduct";
 
-                        decimal labaPerItem = item.Laba / item.Qty; // Laba per item
+                        decimal labaPerItem = item.Laba / item.Qty; 
 
                         using (MySqlCommand cmd = new MySqlCommand(updateTransactionQuery, conn, transaction))
                         {
@@ -362,7 +362,7 @@ namespace KasirCokro.Views.Admin
                             await cmd.ExecuteNonQueryAsync();
                         }
 
-                        // Update stock in products table
+                        
                         string updateStockQuery = @"
                             UPDATE products 
                             SET stok = stok + 1 
@@ -396,7 +396,7 @@ namespace KasirCokro.Views.Admin
         {
             try
             {
-                // Implement print functionality
+                
                 MessageBox.Show("Fitur print akan segera tersedia!", "Informasi",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
