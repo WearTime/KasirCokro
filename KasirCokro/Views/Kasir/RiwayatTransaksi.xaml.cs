@@ -247,7 +247,6 @@ Menggunakan data sample...", "Warning",
             {
                 var worksheet = package.Workbook.Worksheets.Add("Riwayat Transaksi");
 
-                // Headers
                 worksheet.Cells[1, 1].Value = "No";
                 worksheet.Cells[1, 2].Value = "Kode Transaksi";
                 worksheet.Cells[1, 3].Value = "Tanggal";
@@ -264,14 +263,11 @@ Menggunakan data sample...", "Warning",
                     worksheet.Cells[i + 2, 5].Value = transaksi.TotalHarga;
                 }
 
-                // Format currency column
                 var totalHargaRange = worksheet.Cells[2, 5, _allTransaksi.Count + 1, 5];
                 totalHargaRange.Style.Numberformat.Format = "Rp #,##0";
 
-                // Auto-fit columns
                 worksheet.Cells.AutoFitColumns();
 
-                // Style headers
                 var headerRange = worksheet.Cells[1, 1, 1, 5];
                 headerRange.Style.Font.Bold = true;
                 headerRange.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;

@@ -1,12 +1,9 @@
 ﻿using ClosedXML.Excel;
 using KasirCokro.Models;
-using KasirCokro.Views.Admin;
 using KasirCokro.Views.Auth;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -417,18 +414,51 @@ namespace KasirCokro.Views.Admin
             txtManualNamaProduk.Text = "";
             txtManualStok.Text = "";
             txtManualSupplier.Text = "";
+            txtManualPendapatan.Text = "";
+            txtManualHargaJual.Text = "";
+            txtManualPercntage.Text = "0%";
+            txtManualLaba.Text = "0";
+            txtManualStokAwal.Text = "0";
+            txtManualHarta.Text = "0";
+            txtManualMarkUp.Text = "0";
             txtManualQuantity.Text = "1";
             txtManualHargaBeli.Text = "";
             chkManualKredit.IsChecked = false;
             pnlManualSupplierKredit.Visibility = Visibility.Collapsed;
             txtManualSupplierKredit.Text = "";
 
-            // Update total
             UpdateManualModalTotal();
+            LoadSuppliers();
 
-            // Show modal
             modalManualOverlay.Visibility = Visibility.Visible;
             txtManualBarcode.Focus();
+        }
+        private void CalculatePercentage()
+        {
+            try
+            {
+                if (txtManualHargaBeli == null || txtManualHargaJual == null)
+                {
+                    return; 
+                }
+
+                if (decimal.TryParse(txtManualHargaBeli.Text, out decimal hargaBeli) &&
+                    decimal.TryParse(txtManualHargaJual.Text, out decimal hargaJual) &&
+                    hargaBeli > 0)
+                {
+                    // Calculate percentage markup: ((Harga Jual - Harga Beli) / Harga Beli) * 100
+                    decimal percentage = ((hargaJual - hargaBeli) / hargaBeli) * 100;
+                    txtManualPercntage.Text = Math.Round(percentage, 2).ToString() + "%";
+                }
+                else
+                {
+                    txtManualPercntage.Text = "0%";
+                }
+            }
+            catch
+            {
+                txtManualPercntage.Text = "0%";
+            }
         }
 
         private void UpdateManualModalTotal()
@@ -514,6 +544,7 @@ namespace KasirCokro.Views.Admin
                 return false;
             }
 
+
             // Validasi Stok
             if (string.IsNullOrEmpty(txtManualStok.Text) || !int.TryParse(txtManualStok.Text, out int stok) || stok < 0)
             {
@@ -522,8 +553,15 @@ namespace KasirCokro.Views.Admin
                 return false;
             }
 
+            if (string.IsNullOrEmpty(txtManualStokAwal.Text) || !int.TryParse(txtManualStokAwal.Text, out int stokAwal) || stokAwal < 0)
+            {
+                MessageBox.Show("Stok Aawl harus berupa angka positif atau nol.");
+                txtManualStok.Focus();
+                return false;
+            }
+
             // Validasi Supplier
-            if (string.IsNullOrEmpty(txtManualSupplier.Text.Trim()))
+            if (txtManualSupplier.SelectedValue == null)
             {
                 MessageBox.Show("Supplier harus diisi.");
                 txtManualSupplier.Focus();
@@ -546,6 +584,42 @@ namespace KasirCokro.Views.Admin
                 return false;
             }
 
+            if (string.IsNullOrEmpty(txtManualHargaJual.Text) || !decimal.TryParse(txtManualHargaJual.Text, out decimal hargaJual) || hargaJual <= 0)
+            {
+                MessageBox.Show("Harga jual harus berupa angka positif.");
+                txtManualHargaBeli.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(txtManualLaba.Text) || !decimal.TryParse(txtManualLaba.Text, out decimal laba) || laba < 0)
+            {
+                MessageBox.Show("Laba harus berupa angka positif atau nol.");
+                txtManualHargaBeli.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(txtManualMarkUp.Text) || !decimal.TryParse(txtManualHargaJual.Text, out decimal markUp) || markUp < 0)
+            {
+                MessageBox.Show("Markup harus berupa angka positif atau nol.");
+                txtManualHargaBeli.Focus();
+                return false;
+            }
+            if (string.IsNullOrEmpty(txtManualPendapatan.Text) || !decimal.TryParse(txtManualPendapatan.Text, out decimal pendapatan) || pendapatan < 0)
+            {
+                MessageBox.Show("Pendapatan harus berupa angka positif atau nol.");
+                txtManualHargaBeli.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(txtManualHarta.Text) || !decimal.TryParse(txtManualHarta.Text, out decimal harta) || harta < 0)
+            {
+                MessageBox.Show("Harta harus berupa angka positif atau nol.");
+                txtManualHargaBeli.Focus();
+                return false;
+            }
+
+
+
             // Validasi Supplier Kredit
             if (chkManualKredit.IsChecked == true && string.IsNullOrEmpty(txtManualSupplierKredit.Text.Trim()))
             {
@@ -557,6 +631,35 @@ namespace KasirCokro.Views.Admin
             return true;
         }
 
+        private void LoadSuppliers()
+        {
+            try
+            {
+                List<Supplier> suppliers = new List<Supplier>();
+
+                using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
+                {
+                    string query = "SELECT id, nama_supplier FROM suppliers ORDER BY nama_supplier";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    MySqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        suppliers.Add(new Supplier
+                        {
+                            Id = reader.GetInt32("id"),
+                            NamaSupplier = reader.GetString("nama_supplier")
+                        });
+                    }
+                }
+
+                txtManualSupplier.ItemsSource = suppliers;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memuat data supplier: " + ex.Message);
+            }
+        }
         private void SaveManualBarangMasuk()
         {
             try
@@ -568,24 +671,35 @@ namespace KasirCokro.Views.Admin
                     MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn);
                     checkCmd.Parameters.AddWithValue("@barcode", txtManualBarcode.Text.Trim());
 
+                    string persentase = txtManualPercntage.Text.Replace("%", "").Trim();
+                    if (!decimal.TryParse(persentase, out decimal percentageValue))
+                    {
+                        persentase = "0";
+                    }
                     int productExists = Convert.ToInt32(checkCmd.ExecuteScalar());
-
+                    int supplierId = (int)txtManualSupplier.SelectedValue;
                     if (productExists == 0)
                     {
                         // Insert produk baru jika belum ada
                         string insertProductQuery = @"
                     INSERT INTO products 
-                    (barcode, nama_produk, harga_jual, stok, stok_awal, supplier_id, harga_beli, created_at, updated_at) 
+                    (barcode, nama_produk, harga_jual, stok, stok_awal, supplier_id, harga_beli, mark_up, pendapatan, laba, harta, persentase, created_at, updated_at) 
                     VALUES 
-                    (@barcode, @nama_produk, @harga_jual, @stok, @stok_awal, 1, @harga_beli, NOW(), NOW())";
+                    (@barcode, @nama_produk, @harga_jual, @stok, @stok_awal, @supplier_id, @harga_beli, @markup, @pendapatan, @laba, @harta, @pesentase, NOW(), NOW())";
 
                         MySqlCommand insertProductCmd = new MySqlCommand(insertProductQuery, conn);
                         insertProductCmd.Parameters.AddWithValue("@barcode", txtManualBarcode.Text.Trim());
                         insertProductCmd.Parameters.AddWithValue("@nama_produk", txtManualNamaProduk.Text.Trim());
-                        insertProductCmd.Parameters.AddWithValue("@harga_jual", decimal.Parse(txtManualHargaBeli.Text)); // Sementara harga jual = harga beli
+                        insertProductCmd.Parameters.AddWithValue("@harga_jual", decimal.Parse(txtManualHargaJual.Text));
+                        insertProductCmd.Parameters.AddWithValue("@supplier_id", supplierId);
                         insertProductCmd.Parameters.AddWithValue("@stok", int.Parse(txtManualStok.Text));
-                        insertProductCmd.Parameters.AddWithValue("@stok_awal", int.Parse(txtManualStok.Text));
+                        insertProductCmd.Parameters.AddWithValue("@stok_awal", int.Parse(txtManualStokAwal.Text));
                         insertProductCmd.Parameters.AddWithValue("@harga_beli", decimal.Parse(txtManualHargaBeli.Text));
+                        insertProductCmd.Parameters.AddWithValue("@markup", decimal.Parse(txtManualMarkUp.Text));
+                        insertProductCmd.Parameters.AddWithValue("@pendapatan", decimal.Parse(txtManualPendapatan.Text));
+                        insertProductCmd.Parameters.AddWithValue("@laba", decimal.Parse(txtManualLaba.Text));
+                        insertProductCmd.Parameters.AddWithValue("@harta", decimal.Parse(txtManualHarta.Text));
+                        insertProductCmd.Parameters.AddWithValue("@pesentase", persentase); // Convert percentage to decimal
 
                         insertProductCmd.ExecuteNonQuery();
                     }
@@ -653,6 +767,12 @@ namespace KasirCokro.Views.Admin
         private void TxtManualHargaBeli_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateManualModalTotal();
+            CalculatePercentage();
+        }
+
+        private void TxtManualHargaJual_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CalculatePercentage();
         }
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
@@ -768,27 +888,64 @@ namespace KasirCokro.Views.Admin
         // Navigation methods
         private void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
-            DashboardAdmin dashboard = new DashboardAdmin();
+            Views.Admin.DashboardAdmin dashboard = new Views.Admin.DashboardAdmin();
             dashboard.Show();
             this.Close();
         }
 
         private void Product_Click(object sender, RoutedEventArgs e)
         {
-            ProductsPage products = new ProductsPage();
+            Views.Admin.ProductsPage products = new Views.Admin.ProductsPage();
             products.Show();
             this.Close();
         }
 
         private void BrngMasuk_Click(object sender, RoutedEventArgs e)
         {
-            // Already on this page
+            Views.Admin.BarangMasukPage barangMasuk = new Views.Admin.BarangMasukPage();
+            barangMasuk.Show();
+            this.Close();
+        }
+        private void BrngKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            Views.Admin.BarangKeluarPage barangMasuk = new Views.Admin.BarangKeluarPage();
+            barangMasuk.Show();
+            this.Close();
         }
 
         private void Supplier_Click(object sender, RoutedEventArgs e)
         {
-            SuppliersPage suppliers = new SuppliersPage();
+            Views.Admin.SuppliersPage suppliers = new Views.Admin.SuppliersPage();
             suppliers.Show();
+            this.Close();
+        }
+
+        private void Kas_Click(object sender, RoutedEventArgs e)
+        {
+            KasPage kasPage = new KasPage();
+            kasPage.Show();
+            this.Close();
+        }
+
+        private void TransactionMasuk_Click(object sender, RoutedEventArgs e)
+        {
+            TransactionMasukPage transactionMasuk = new TransactionMasukPage();
+            transactionMasuk.Show();
+            this.Close();
+        }
+
+        private void TransactionKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to Transaction Keluar page
+            var transactionKeluarWindow = new TransactionKeluarPage();
+            transactionKeluarWindow.Show();
+            this.Close();
+        }
+
+        private void Pihutang_Click(object sender, RoutedEventArgs e)
+        {
+            PihutangPage pihutangPage = new PihutangPage();
+            pihutangPage.Show();
             this.Close();
         }
 

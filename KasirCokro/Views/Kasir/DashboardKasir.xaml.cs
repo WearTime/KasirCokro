@@ -110,7 +110,7 @@ namespace KasirCokro.Views.Kasir
                 var login = new LoginWindow();
                 login.Show();
                 this.Close();
-            }           
+            }
         }
     }
 }

@@ -51,7 +51,6 @@ namespace KasirCokro.Views.Auth
             }
         }
 
-        // Event handler untuk Password PasswordBox
         private void TxtPassword_GotFocus(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(txtPassword.Password))
@@ -99,7 +98,6 @@ namespace KasirCokro.Views.Auth
                     conn.Close();
                     await conn.OpenAsync();
 
-                    //await Helpers.DatabasePasswordUpdater.CreateNewUser(username, password, "kasir");
                     string query = "SELECT id, username, password, role FROM users WHERE username = @username";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@username", username);

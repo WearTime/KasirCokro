@@ -1,107 +1,85 @@
-﻿using ClosedXML.Excel;
-using KasirCokro.Models;
-using KasirCokro.Views.Admin;
-using KasirCokro.Views.Auth;
+﻿using KasirCokro.Views.Auth;
 using MySql.Data.MySqlClient;
+using SixLabors.Fonts;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Font = System.Drawing.Font;
 
 namespace KasirCokro.Views.Admin
 {
-    public partial class BarangKeluarPage : Window
+    public partial class BarangKeluarPage : Window, INotifyPropertyChanged
     {
-        private Product selectedProduct = null;
+        private ObservableCollection<KeranjangItem> keranjangItems;
+        private ProdukItem currentSelectedProduct;
+        private decimal totalTransaksi = 0;
+        private int totalItem = 0;
+        private string currentTransactionCode;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public BarangKeluarPage()
         {
             InitializeComponent();
-            LoadDataBarangMasuk();
-            UpdateTotalDisplay();
-            // Set focus ke textbox barcode
+            InitializeKeranjang();
+            LoadDataProduk();
+            GenerateTransactionCode();
             txtBarcode.Focus();
         }
 
-        private void LoadDataBarangMasuk()
+        private void InitializeKeranjang()
         {
-            var list = new List<BarangMasuk>();
-
-            try
-            {
-                using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
-                {
-                    string query = @"
-                        SELECT 
-                            ti.id,
-                            ti.tgl,
-                            ti.kode_product,
-                            ti.nama,
-                            ti.qty,
-                            ti.suplier,
-                            ti.harga,
-                            ti.subtotal,
-                            ti.payment,
-                            DATE_FORMAT(ti.tgl, '%H:%i') as waktu_format
-                        FROM transaction_in ti 
-                        WHERE DATE(ti.tgl) = CURDATE() 
-                        ORDER BY ti.tgl DESC";
-
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    var reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        list.Add(new BarangMasuk
-                        {
-                            Id = reader.GetInt32("id"),
-                            Waktu = reader.GetString("waktu_format"),
-                            Barcode = reader.GetString("kode_product"),
-                            NamaProduk = reader.GetString("nama"),
-                            Supplier = reader.GetString("suplier"),
-                            Quantity = reader.GetInt32("qty"),
-                            HargaBeli = reader.GetDecimal("harga"),
-                            Total = reader.GetDecimal("subtotal"),
-                            IsKredit = reader.GetString("payment") == "kredit"
-                        });
-                    }
-
-                    dgBarangMasuk.ItemsSource = list;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error memuat data barang masuk: " + ex.Message);
-            }
+            keranjangItems = new ObservableCollection<KeranjangItem>();
+            dgKeranjang.ItemsSource = keranjangItems;
+            keranjangItems.CollectionChanged += KeranjangItems_CollectionChanged;
         }
 
-        private void UpdateTotalDisplay()
+        private void KeranjangItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            UpdateTotalTransaksi();
+        }
+
+        private void GenerateTransactionCode()
+        {
+            currentTransactionCode = "TRX" + DateTime.Now.ToString("yyyyMMddHHmmss");
+        }
+
+        private void LoadDataProduk()
         {
             try
             {
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
-                    // Total hari ini
-                    string queryTotal = "SELECT COALESCE(SUM(subtotal), 0) as total FROM transaction_in WHERE DATE(tgl) = CURDATE()";
-                    MySqlCommand cmdTotal = new MySqlCommand(queryTotal, conn);
-                    decimal totalHariIni = Convert.ToDecimal(cmdTotal.ExecuteScalar());
 
-                    // Total item hari ini
-                    string queryItem = "SELECT COALESCE(SUM(qty), 0) as total_item FROM transaction_in WHERE DATE(tgl) = CURDATE()";
-                    MySqlCommand cmdItem = new MySqlCommand(queryItem, conn);
-                    int totalItem = Convert.ToInt32(cmdItem.ExecuteScalar());
+                    string query = @"SELECT p.*, s.nama_supplier 
+                                   FROM products p 
+                                   LEFT JOIN suppliers s ON p.supplier_id = s.id 
+                                   WHERE p.stok > 0";
 
-                    txtTotalHariIni.Text = $"Rp {totalHariIni:N0}";
-                    txtTotalItem.Text = totalItem.ToString();
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    dgProdukPencarian.ItemsSource = dt.DefaultView;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error memuat total: " + ex.Message);
+                MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -109,724 +87,804 @@ namespace KasirCokro.Views.Admin
         {
             if (e.Key == Key.Enter)
             {
-                SearchProductByBarcode();
+                string barcode = txtBarcode.Text.Trim();
+                if (!string.IsNullOrEmpty(barcode))
+                {
+                    SearchProductByBarcode(barcode);
+                }
             }
         }
 
         private void TxtBarcode_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Auto search ketika panjang barcode mencapai 13 karakter (standar EAN-13)
+            string barcode = txtBarcode.Text.Trim();
+
             if (txtBarcode.Text.Length >= 13)
             {
-                SearchProductByBarcode();
+                SearchProductByBarcode(barcode);
             }
         }
 
-        private void SearchProductByBarcode()
+        private void SearchProductByBarcode(string barcode)
         {
-            string barcode = txtBarcode.Text.Trim();
-
-            if (string.IsNullOrEmpty(barcode))
-            {
-                MessageBox.Show("Silakan masukkan barcode terlebih dahulu.");
-                return;
-            }
-
             try
             {
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
-                    string query = @"
-                SELECT 
-                    p.id, p.barcode, p.nama_produk, p.harga_jual, p.stok, 
-                    p.harga_beli, p.supplier_id,
-                    s.nama_supplier
-                FROM products p
-                LEFT JOIN suppliers s ON p.supplier_id = s.id
-                WHERE p.barcode = @barcode";
+
+                    string query = @"SELECT p.*, s.nama_supplier 
+                                   FROM products p 
+                                   LEFT JOIN suppliers s ON p.supplier_id = s.id 
+                                   WHERE p.barcode = @barcode AND p.stok > 0";
 
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@barcode", barcode);
 
-                    var reader = cmd.ExecuteReader();
+                    MySqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
-                        selectedProduct = new Product
+                        currentSelectedProduct = new ProdukItem
                         {
                             Id = reader.GetInt32("id"),
                             Barcode = reader.GetString("barcode"),
                             NamaProduk = reader.GetString("nama_produk"),
                             HargaJual = reader.GetDecimal("harga_jual"),
                             Stok = reader.GetInt32("stok"),
-                            // Fixed: Properly handle nullable decimal
-                            HargaBeli = reader.GetDecimal("harga_beli"),
                             SupplierId = reader.GetInt32("supplier_id"),
-                            // Create Supplier object properly
-                            Supplier = new Models.Supplier
-                            {
-                                Id = reader.GetInt32("supplier_id"),
-                                // Fixed: Properly handle nullable string
-                                NamaSupplier = reader.GetString("nama_supplier")
-                            }
+                            NamaSupplier = reader.GetString("nama_supplier"),
+                            HargaBeli = reader.GetDecimal("harga_beli"),
+                            MarkUp = reader.GetDecimal("mark_up")
                         };
 
+                        reader.Close();
                         ShowProductModal();
                     }
                     else
                     {
-                        MessageBox.Show("Produk dengan barcode tersebut tidak ditemukan.", "Produk Tidak Ditemukan",
-                                      MessageBoxButton.OK, MessageBoxImage.Warning);
-                        txtBarcode.SelectAll();
+                        MessageBox.Show("Produk tidak ditemukan atau stok habis!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                        txtBarcode.Clear();
                         txtBarcode.Focus();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error mencari produk: " + ex.Message);
+                MessageBox.Show($"Error searching product: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void ShowProductModal()
         {
-            if (selectedProduct != null)
+            if (currentSelectedProduct != null)
             {
-                if (txtModalBarcode == null || txtModalNamaProduk == null ||
-                    txtModalStok == null || txtModalSupplier == null ||
-                    txtModalQuantity == null || txtModalHargaBeli == null)
-                {
-                    MessageBox.Show("Error: Kontrol modal belum siap. Silakan coba lagi.");
-                    return;
-                }
+                txtModalBarcode.Text = currentSelectedProduct.Barcode;
+                txtModalNamaProduk.Text = currentSelectedProduct.NamaProduk;
+                txtModalHarga.Text = $"Rp {currentSelectedProduct.HargaJual:N0}";
+                txtModalStok.Text = currentSelectedProduct.Stok.ToString();
+                txtQuantity.Text = "1";
+                UpdateModalSubtotal();
 
-                txtModalBarcode.Text = selectedProduct.Barcode ?? "";
-                txtModalNamaProduk.Text = selectedProduct.NamaProduk ?? "";
-                txtModalStok.Text = selectedProduct.Stok.ToString();
-                txtModalSupplier.Text = selectedProduct.Supplier?.NamaSupplier ?? "";
-                txtModalQuantity.Text = "1";
-                txtModalHargaBeli.Text = selectedProduct.HargaBeli.ToString();
-
-                if (chkKredit != null)
-                {
-                    chkKredit.IsChecked = false;
-                }
-
-                if (pnlSupplierKredit != null)
-                {
-                    pnlSupplierKredit.Visibility = Visibility.Collapsed;
-                }
-
-                if (txtModalSupplierKredit != null)
-                {
-                    txtModalSupplierKredit.Text = "";
-                }
-
-                UpdateModalTotal();
-
-                if (modalOverlay != null)
-                {
-                    modalOverlay.Visibility = Visibility.Visible;
-                    txtModalQuantity.Focus();
-                }
+                modalOverlay.Visibility = Visibility.Visible;
+                txtQuantity.Focus();
+                txtQuantity.SelectAll();
             }
         }
-        private bool AreModalControlsInitialized()
+
+        private void TxtQuantity_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            return txtModalBarcode != null &&
-                   txtModalNamaProduk != null &&
-                   txtModalStok != null &&
-                   txtModalSupplier != null &&
-                   txtModalQuantity != null &&
-                   txtModalHargaBeli != null &&
-                   txtModalTotal != null &&
-                   chkKredit != null &&
-                   pnlSupplierKredit != null &&
-                   txtModalSupplierKredit != null &&
-                   modalOverlay != null;
+            e.Handled = !char.IsDigit(e.Text, 0);
         }
-        private void UpdateModalTotal()
+
+        private void UpdateModalSubtotal()
         {
-            try
+            if (currentSelectedProduct != null && int.TryParse(txtQuantity.Text, out int qty))
             {
-                // Pastikan kontrol UI sudah diinisialisasi
-                if (txtModalQuantity == null || txtModalHargaBeli == null || txtModalTotal == null)
+                if (qty > currentSelectedProduct.Stok)
                 {
-                    return; // Keluar jika kontrol belum siap
-                }
-
-                // Pastikan text tidak kosong
-                if (string.IsNullOrEmpty(txtModalQuantity.Text) || string.IsNullOrEmpty(txtModalHargaBeli.Text))
-                {
-                    txtModalTotal.Text = "Rp 0";
-                    return;
-                }
-
-                // Parse dengan validasi
-                if (int.TryParse(txtModalQuantity.Text, out int qty) &&
-                    decimal.TryParse(txtModalHargaBeli.Text, out decimal harga))
-                {
-                    decimal total = qty * harga;
-                    txtModalTotal.Text = $"Rp {total:N0}";
+                    borderWarning.Visibility = Visibility.Visible;
+                    txtWarning.Text = $"Quantity melebihi stok tersedia ({currentSelectedProduct.Stok})";
                 }
                 else
                 {
-                    txtModalTotal.Text = "Rp 0";
+                    borderWarning.Visibility = Visibility.Collapsed;
                 }
+
+                decimal subtotal = currentSelectedProduct.HargaJual * qty;
+                txtModalSubtotal.Text = $"Rp {subtotal:N0}";
             }
-            catch (Exception ex)
+        }
+
+        private void BtnTambahKeKeranjang_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentSelectedProduct != null && int.TryParse(txtQuantity.Text, out int qty))
             {
-                // Log error untuk debugging
-                System.Diagnostics.Debug.WriteLine($"Error in UpdateModalTotal: {ex.Message}");
-                if (txtModalTotal != null)
+                if (qty <= 0)
                 {
-                    txtModalTotal.Text = "Rp 0";
+                    MessageBox.Show("Quantity harus lebih dari 0!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
+
+                if (qty > currentSelectedProduct.Stok)
+                {
+                    MessageBox.Show($"Quantity melebihi stok tersedia ({currentSelectedProduct.Stok})!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Cek apakah produk sudah ada di keranjang
+                var existingItem = keranjangItems.FirstOrDefault(k => k.Barcode == currentSelectedProduct.Barcode);
+                if (existingItem != null)
+                {
+                    existingItem.Quantity += qty;
+                    existingItem.UpdateSubtotal();
+                }
+                else
+                {
+                    keranjangItems.Add(new KeranjangItem
+                    {
+                        Barcode = currentSelectedProduct.Barcode,
+                        NamaProduk = currentSelectedProduct.NamaProduk,
+                        HargaJual = currentSelectedProduct.HargaJual,
+                        Quantity = qty,
+                        HargaBeli = currentSelectedProduct.HargaBeli,
+                        MarkUp = currentSelectedProduct.MarkUp,
+                        SupplierId = currentSelectedProduct.SupplierId
+                    });
+                    
+                }
+
+                modalOverlay.Visibility = Visibility.Collapsed;
+                txtBarcode.Clear();
+                txtBarcode.Focus();
+                currentSelectedProduct = null;
             }
         }
 
-        private void ChkKredit_Checked(object sender, RoutedEventArgs e)
-        {
-            pnlSupplierKredit.Visibility = Visibility.Visible;
-            txtModalSupplierKredit.Focus();
-        }
-
-        private void ChkKredit_Unchecked(object sender, RoutedEventArgs e)
-        {
-            pnlSupplierKredit.Visibility = Visibility.Collapsed;
-            txtModalSupplierKredit.Text = "";
-        }
-
-        private void BtnModalBatal_Click(object sender, RoutedEventArgs e)
+        private void BtnBatalModal_Click(object sender, RoutedEventArgs e)
         {
             modalOverlay.Visibility = Visibility.Collapsed;
-            txtBarcode.Text = "";
+            txtBarcode.Clear();
             txtBarcode.Focus();
+            currentSelectedProduct = null;
         }
-
-        private void BtnModalTambah_Click(object sender, RoutedEventArgs e)
-        {
-            if (ValidateModalInput())
-            {
-                SaveBarangMasuk();
-            }
-        }
-
-        private bool ValidateModalInput()
-        {
-            if (string.IsNullOrEmpty(txtModalQuantity.Text) || !int.TryParse(txtModalQuantity.Text, out int qty) || qty <= 0)
-            {
-                MessageBox.Show("Quantity harus berupa angka positif.");
-                txtModalQuantity.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(txtModalHargaBeli.Text) || !decimal.TryParse(txtModalHargaBeli.Text, out decimal harga) || harga <= 0)
-            {
-                MessageBox.Show("Harga beli harus berupa angka positif.");
-                txtModalHargaBeli.Focus();
-                return false;
-            }
-
-            if (chkKredit.IsChecked == true && string.IsNullOrEmpty(txtModalSupplierKredit.Text.Trim()))
-            {
-                MessageBox.Show("Nama supplier harus diisi untuk pembelian kredit.");
-                txtModalSupplierKredit.Focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        private void SaveBarangMasuk()
-        {
-            try
-            {
-                using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
-                {
-                    // Generate kode transaksi
-                    string kodeTransaksi = GenerateKodeTransaksi();
-
-                    int qty = int.Parse(txtModalQuantity.Text);
-                    decimal harga = decimal.Parse(txtModalHargaBeli.Text);
-                    decimal subtotal = qty * harga;
-                    string payment = chkKredit.IsChecked == true ? "kredit" : "tunai";
-                    string supplier = chkKredit.IsChecked == true ? txtModalSupplierKredit.Text.Trim() : selectedProduct.Supplier.NamaSupplier;
-
-                    // Insert ke transaction_in
-                    string queryInsert = @"
-                        INSERT INTO transaction_in 
-                        (kode_transaksi, tgl, no_faktur, kode_product, nama, qty, suplier, payment, harga, subtotal, retur) 
-                        VALUES 
-                        (@kode_transaksi, @tgl, @no_faktur, @kode_product, @nama, @qty, @suplier, @payment, @harga, @subtotal, 0)";
-
-                    MySqlCommand cmdInsert = new MySqlCommand(queryInsert, conn);
-                    cmdInsert.Parameters.AddWithValue("@kode_transaksi", kodeTransaksi);
-                    cmdInsert.Parameters.AddWithValue("@tgl", DateTime.Now);
-                    cmdInsert.Parameters.AddWithValue("@no_faktur", kodeTransaksi); // Menggunakan kode transaksi sebagai no faktur
-                    cmdInsert.Parameters.AddWithValue("@kode_product", selectedProduct.Barcode);
-                    cmdInsert.Parameters.AddWithValue("@nama", selectedProduct.NamaProduk);
-                    cmdInsert.Parameters.AddWithValue("@qty", qty);
-                    cmdInsert.Parameters.AddWithValue("@suplier", supplier);
-                    cmdInsert.Parameters.AddWithValue("@payment", payment);
-                    cmdInsert.Parameters.AddWithValue("@harga", harga);
-                    cmdInsert.Parameters.AddWithValue("@subtotal", subtotal);
-
-                    cmdInsert.ExecuteNonQuery();
-
-                    // Update stok produk
-                    string queryUpdateStok = "UPDATE products SET stok = stok + @qty WHERE barcode = @barcode";
-                    MySqlCommand cmdUpdateStok = new MySqlCommand(queryUpdateStok, conn);
-                    cmdUpdateStok.Parameters.AddWithValue("@qty", qty);
-                    cmdUpdateStok.Parameters.AddWithValue("@barcode", selectedProduct.Barcode);
-                    cmdUpdateStok.ExecuteNonQuery();
-
-                    MessageBox.Show("Barang masuk berhasil ditambahkan!", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    // Refresh data
-                    LoadDataBarangMasuk();
-                    UpdateTotalDisplay();
-
-                    // Close modal dan reset
-                    modalOverlay.Visibility = Visibility.Collapsed;
-                    txtBarcode.Text = "";
-                    txtBarcode.Focus();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error menyimpan barang masuk: " + ex.Message);
-            }
-        }
-
-        private string GenerateKodeTransaksi()
-        {
-            return "TI" + DateTime.Now.ToString("yyyyMMddHHmmss");
-        }
-
-        // Tambahkan method ini ke dalam class BarangKeluarPage
 
         private void BtnCariManual_Click(object sender, RoutedEventArgs e)
         {
-            ShowManualInputModal();
+            modalPencarian.Visibility = Visibility.Visible;
+            txtCariProduk.Focus();
         }
 
-        private void ShowManualInputModal()
+        private void TxtCariProduk_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Reset form
-            txtManualBarcode.Text = "";
-            txtManualNamaProduk.Text = "";
-            txtManualStok.Text = "";
-            txtManualSupplier.Text = "";
-            txtManualQuantity.Text = "1";
-            txtManualHargaBeli.Text = "";
-            chkManualKredit.IsChecked = false;
-            pnlManualSupplierKredit.Visibility = Visibility.Collapsed;
-            txtManualSupplierKredit.Text = "";
+            string searchTerm = txtCariProduk.Text.Trim();
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                LoadDataProduk();
+                return;
+            }
 
-            // Update total
-            UpdateManualModalTotal();
-
-            // Show modal
-            modalManualOverlay.Visibility = Visibility.Visible;
-            txtManualBarcode.Focus();
+            SearchProducts(searchTerm);
         }
 
-        private void UpdateManualModalTotal()
-        {
-            try
-            {
-                // Pastikan kontrol UI sudah diinisialisasi
-                if (txtManualQuantity == null || txtManualHargaBeli == null || txtManualTotal == null)
-                {
-                    return;
-                }
-
-                // Pastikan text tidak kosong
-                if (string.IsNullOrEmpty(txtManualQuantity.Text) || string.IsNullOrEmpty(txtManualHargaBeli.Text))
-                {
-                    txtManualTotal.Text = "Rp 0";
-                    return;
-                }
-
-                // Parse dengan validasi
-                if (int.TryParse(txtManualQuantity.Text, out int qty) &&
-                    decimal.TryParse(txtManualHargaBeli.Text, out decimal harga))
-                {
-                    decimal total = qty * harga;
-                    txtManualTotal.Text = $"Rp {total:N0}";
-                }
-                else
-                {
-                    txtManualTotal.Text = "Rp 0";
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error in UpdateManualModalTotal: {ex.Message}");
-                if (txtManualTotal != null)
-                {
-                    txtManualTotal.Text = "Rp 0";
-                }
-            }
-        }
-
-        private void ChkManualKredit_Checked(object sender, RoutedEventArgs e)
-        {
-            pnlManualSupplierKredit.Visibility = Visibility.Visible;
-            txtManualSupplierKredit.Focus();
-        }
-
-        private void ChkManualKredit_Unchecked(object sender, RoutedEventArgs e)
-        {
-            pnlManualSupplierKredit.Visibility = Visibility.Collapsed;
-            txtManualSupplierKredit.Text = "";
-        }
-
-        private void BtnManualBatal_Click(object sender, RoutedEventArgs e)
-        {
-            modalManualOverlay.Visibility = Visibility.Collapsed;
-            txtBarcode.Focus();
-        }
-
-        private void BtnManualTambah_Click(object sender, RoutedEventArgs e)
-        {
-            if (ValidateManualModalInput())
-            {
-                SaveManualBarangMasuk();
-            }
-        }
-
-        private bool ValidateManualModalInput()
-        {
-            // Validasi Barcode
-            if (string.IsNullOrEmpty(txtManualBarcode.Text.Trim()))
-            {
-                MessageBox.Show("Barcode harus diisi.");
-                txtManualBarcode.Focus();
-                return false;
-            }
-
-            // Validasi Nama Produk
-            if (string.IsNullOrEmpty(txtManualNamaProduk.Text.Trim()))
-            {
-                MessageBox.Show("Nama produk harus diisi.");
-                txtManualNamaProduk.Focus();
-                return false;
-            }
-
-            // Validasi Stok
-            if (string.IsNullOrEmpty(txtManualStok.Text) || !int.TryParse(txtManualStok.Text, out int stok) || stok < 0)
-            {
-                MessageBox.Show("Stok harus berupa angka positif atau nol.");
-                txtManualStok.Focus();
-                return false;
-            }
-
-            // Validasi Supplier
-            if (string.IsNullOrEmpty(txtManualSupplier.Text.Trim()))
-            {
-                MessageBox.Show("Supplier harus diisi.");
-                txtManualSupplier.Focus();
-                return false;
-            }
-
-            // Validasi Quantity
-            if (string.IsNullOrEmpty(txtManualQuantity.Text) || !int.TryParse(txtManualQuantity.Text, out int qty) || qty <= 0)
-            {
-                MessageBox.Show("Quantity harus berupa angka positif.");
-                txtManualQuantity.Focus();
-                return false;
-            }
-
-            // Validasi Harga Beli
-            if (string.IsNullOrEmpty(txtManualHargaBeli.Text) || !decimal.TryParse(txtManualHargaBeli.Text, out decimal harga) || harga <= 0)
-            {
-                MessageBox.Show("Harga beli harus berupa angka positif.");
-                txtManualHargaBeli.Focus();
-                return false;
-            }
-
-            // Validasi Supplier Kredit
-            if (chkManualKredit.IsChecked == true && string.IsNullOrEmpty(txtManualSupplierKredit.Text.Trim()))
-            {
-                MessageBox.Show("Nama supplier harus diisi untuk pembelian kredit.");
-                txtManualSupplierKredit.Focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        private void SaveManualBarangMasuk()
+        private void SearchProducts(string searchTerm)
         {
             try
             {
                 using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
                 {
-                    // Cek apakah produk sudah ada
-                    string checkQuery = "SELECT COUNT(*) FROM products WHERE barcode = @barcode";
-                    MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn);
-                    checkCmd.Parameters.AddWithValue("@barcode", txtManualBarcode.Text.Trim());
 
-                    int productExists = Convert.ToInt32(checkCmd.ExecuteScalar());
+                    string query = @"SELECT p.*, s.nama_supplier 
+                                   FROM products p 
+                                   LEFT JOIN suppliers s ON p.supplier_id = s.id 
+                                   WHERE (p.nama_produk LIKE @search OR p.barcode LIKE @search) 
+                                   AND p.stok > 0";
 
-                    if (productExists == 0)
-                    {
-                        // Insert produk baru jika belum ada
-                        string insertProductQuery = @"
-                    INSERT INTO products 
-                    (barcode, nama_produk, harga_jual, stok, stok_awal, supplier_id, harga_beli, created_at, updated_at) 
-                    VALUES 
-                    (@barcode, @nama_produk, @harga_jual, @stok, @stok_awal, 1, @harga_beli, NOW(), NOW())";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@search", $"%{searchTerm}%");
 
-                        MySqlCommand insertProductCmd = new MySqlCommand(insertProductQuery, conn);
-                        insertProductCmd.Parameters.AddWithValue("@barcode", txtManualBarcode.Text.Trim());
-                        insertProductCmd.Parameters.AddWithValue("@nama_produk", txtManualNamaProduk.Text.Trim());
-                        insertProductCmd.Parameters.AddWithValue("@harga_jual", decimal.Parse(txtManualHargaBeli.Text)); // Sementara harga jual = harga beli
-                        insertProductCmd.Parameters.AddWithValue("@stok", int.Parse(txtManualStok.Text));
-                        insertProductCmd.Parameters.AddWithValue("@stok_awal", int.Parse(txtManualStok.Text));
-                        insertProductCmd.Parameters.AddWithValue("@harga_beli", decimal.Parse(txtManualHargaBeli.Text));
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                        insertProductCmd.ExecuteNonQuery();
-                    }
-
-                    // Generate kode transaksi
-                    string kodeTransaksi = GenerateKodeTransaksi();
-
-                    int qty = int.Parse(txtManualQuantity.Text);
-                    decimal harga = decimal.Parse(txtManualHargaBeli.Text);
-                    decimal subtotal = qty * harga;
-                    string payment = chkManualKredit.IsChecked == true ? "kredit" : "tunai";
-                    string supplier = chkManualKredit.IsChecked == true ? txtManualSupplierKredit.Text.Trim() : txtManualSupplier.Text.Trim();
-
-                    // Insert ke transaction_in
-                    string queryInsert = @"
-                INSERT INTO transaction_in 
-                (kode_transaksi, tgl, no_faktur, kode_product, nama, qty, suplier, payment, harga, subtotal, retur) 
-                VALUES 
-                (@kode_transaksi, @tgl, @no_faktur, @kode_product, @nama, @qty, @suplier, @payment, @harga, @subtotal, 0)";
-
-                    MySqlCommand cmdInsert = new MySqlCommand(queryInsert, conn);
-                    cmdInsert.Parameters.AddWithValue("@kode_transaksi", kodeTransaksi);
-                    cmdInsert.Parameters.AddWithValue("@tgl", DateTime.Now);
-                    cmdInsert.Parameters.AddWithValue("@no_faktur", kodeTransaksi);
-                    cmdInsert.Parameters.AddWithValue("@kode_product", txtManualBarcode.Text.Trim());
-                    cmdInsert.Parameters.AddWithValue("@nama", txtManualNamaProduk.Text.Trim());
-                    cmdInsert.Parameters.AddWithValue("@qty", qty);
-                    cmdInsert.Parameters.AddWithValue("@suplier", supplier);
-                    cmdInsert.Parameters.AddWithValue("@payment", payment);
-                    cmdInsert.Parameters.AddWithValue("@harga", harga);
-                    cmdInsert.Parameters.AddWithValue("@subtotal", subtotal);
-
-                    cmdInsert.ExecuteNonQuery();
-
-                    // Update stok produk
-                    string queryUpdateStok = "UPDATE products SET stok = stok + @qty WHERE barcode = @barcode";
-                    MySqlCommand cmdUpdateStok = new MySqlCommand(queryUpdateStok, conn);
-                    cmdUpdateStok.Parameters.AddWithValue("@qty", qty);
-                    cmdUpdateStok.Parameters.AddWithValue("@barcode", txtManualBarcode.Text.Trim());
-                    cmdUpdateStok.ExecuteNonQuery();
-
-                    MessageBox.Show("Barang masuk berhasil ditambahkan!", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    // Refresh data
-                    LoadDataBarangMasuk();
-                    UpdateTotalDisplay();
-
-                    // Close modal dan reset
-                    modalManualOverlay.Visibility = Visibility.Collapsed;
-                    txtBarcode.Focus();
+                    dgProdukPencarian.ItemsSource = dt.DefaultView;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error menyimpan barang masuk: " + ex.Message);
+                MessageBox.Show($"Error searching products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // Event handlers untuk manual input
-        private void TxtManualQuantity_TextChanged(object sender, TextChangedEventArgs e)
+        private void BtnPilihProduk_Click(object sender, RoutedEventArgs e)
         {
-            UpdateManualModalTotal();
+            if (dgProdukPencarian.SelectedItem != null)
+            {
+                DataRowView row = (DataRowView)dgProdukPencarian.SelectedItem;
+                SelectProductFromSearch(row);
+            }
         }
 
-        private void TxtManualHargaBeli_TextChanged(object sender, TextChangedEventArgs e)
+        private void DgProdukPencarian_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            UpdateManualModalTotal();
+            if (dgProdukPencarian.SelectedItem != null)
+            {
+                DataRowView row = (DataRowView)dgProdukPencarian.SelectedItem;
+                SelectProductFromSearch(row);
+            }
+        }
+
+        private void SelectProductFromSearch(DataRowView row)
+        {
+            currentSelectedProduct = new ProdukItem
+            {
+                Id = Convert.ToInt32(row["id"]),
+                Barcode = row["barcode"].ToString(),
+                NamaProduk = row["nama_produk"].ToString(),
+                HargaJual = Convert.ToDecimal(row["harga_jual"]),
+                Stok = Convert.ToInt32(row["stok"]),
+                SupplierId = Convert.ToInt32(row["supplier_id"]),
+                NamaSupplier = row["nama_supplier"]?.ToString() ?? "",
+                HargaBeli = row["harga_beli"] == DBNull.Value ? 0 : Convert.ToDecimal(row["harga_beli"]),
+                MarkUp = row["mark_up"] == DBNull.Value ? 0 : Convert.ToDecimal(row["mark_up"])
+            };
+
+            modalPencarian.Visibility = Visibility.Collapsed;
+            ShowProductModal();
+        }
+
+        private void BtnTutupPencarian_Click(object sender, RoutedEventArgs e)
+        {
+            modalPencarian.Visibility = Visibility.Collapsed;
+        }
+
+        private void BtnCari_Click(object sender, RoutedEventArgs e)
+        {
+            SearchProducts(txtCariProduk.Text.Trim());
+        }
+
+        private void BtnHapusItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgKeranjang.SelectedItem is KeranjangItem item)
+            {
+                keranjangItems.Remove(item);
+            }
         }
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
-            txtBarcode.Text = "";
+            txtBarcode.Clear();
             txtBarcode.Focus();
         }
 
-        private void BtnExportExcel_Click(object sender, RoutedEventArgs e)
+        private void BtnClearAll_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.FileName = $"Barang_Masuk_{DateTime.Now:yyyyMMdd}";
-            dlg.DefaultExt = ".xlsx";
-            dlg.Filter = "Excel Files (*.xlsx)|*.xlsx";
-
-            if (dlg.ShowDialog() == true)
+            if (MessageBox.Show("Hapus semua item dari keranjang?", "Konfirmasi", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                ExportToExcel(dlg.FileName);
+                keranjangItems.Clear();
+                txtBarcode.Focus();
             }
         }
 
-        private void ExportToExcel(string filePath)
+        private void UpdateTotalTransaksi()
         {
+            totalTransaksi = keranjangItems.Sum(k => k.Subtotal);
+            totalItem = keranjangItems.Sum(k => k.Quantity);
+
+            txtTotalTransaksi.Text = $"Rp {totalTransaksi:N0}";
+            txtTotalItem.Text = totalItem.ToString();
+
+            UpdateKembalian();
+        }
+
+        private void CmbMetodePembayaran_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbMetodePembayaran?.SelectedItem is ComboBoxItem item &&
+                    pnlNamaPelanggan != null &&
+                    txtJumlahBayar != null)
+            {
+                if (item.Content?.ToString() == "Kredit")
+                {
+                    pnlNamaPelanggan.Visibility = Visibility.Visible;
+                    // Untuk kredit, kosongkan jumlah bayar agar user bisa input DP
+                    txtJumlahBayar.Clear();
+                    txtJumlahBayar.IsReadOnly = false;
+                }
+                else
+                {
+                    pnlNamaPelanggan.Visibility = Visibility.Collapsed;
+                    txtJumlahBayar.IsReadOnly = false;
+                }
+            }
+        }
+
+        private void TxtJumlahBayar_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateKembalian();
+        }
+
+        private void UpdateKembalian()
+        {
+            if (decimal.TryParse(txtJumlahBayar.Text, out decimal jumlahBayar))
+            {
+                string metodePembayaran = ((ComboBoxItem)cmbMetodePembayaran.SelectedItem)?.Content?.ToString();
+
+                if (metodePembayaran == "Kredit")
+                {
+                    // Untuk kredit, tampilkan sisa yang harus dibayar
+                    decimal sisaPembayaran = totalTransaksi - jumlahBayar;
+                    if (sisaPembayaran > 0)
+                    {
+                        txtKembalian.Text = $"Sisa: Rp {sisaPembayaran:N0}";
+                        txtKembalian.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Orange);
+                    }
+                    else if (sisaPembayaran < 0)
+                    {
+                        txtKembalian.Text = $"Kembalian: Rp {Math.Abs(sisaPembayaran):N0}";
+                        txtKembalian.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(46, 125, 50));
+                    }
+                    else
+                    {
+                        txtKembalian.Text = "Lunas";
+                        txtKembalian.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(46, 125, 50));
+                    }
+                }
+                else
+                {
+                    // Untuk tunai, tampilkan kembalian normal
+                    decimal kembalian = jumlahBayar - totalTransaksi;
+                    txtKembalian.Text = $"Rp {kembalian:N0}";
+
+                    if (kembalian < 0)
+                    {
+                        txtKembalian.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
+                    }
+                    else
+                    {
+                        txtKembalian.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(46, 125, 50));
+                    }
+                }
+            }
+            else
+            {
+                txtKembalian.Text = "Rp 0";
+            }
+        }
+
+        private async void BtnSimpan_Click(object sender, RoutedEventArgs e)
+        {
+            if (keranjangItems.Count == 0)
+            {
+                MessageBox.Show("Keranjang kosong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!decimal.TryParse(txtJumlahBayar.Text, out decimal jumlahBayar))
+            {
+                MessageBox.Show("Jumlah bayar tidak valid!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string metodePembayaran = ((ComboBoxItem)cmbMetodePembayaran.SelectedItem).Content.ToString().ToLower();
+            string namaPelanggan = metodePembayaran == "kredit" ? txtNamaPelanggan.Text.Trim() : "-";
+
+            if (metodePembayaran == "kredit" && string.IsNullOrEmpty(namaPelanggan))
+            {
+                MessageBox.Show("Nama pelanggan harus diisi untuk pembayaran kredit!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Validasi untuk kredit - minimal bayar 1 rupiah
+            if (metodePembayaran == "kredit" && jumlahBayar <= 0)
+            {
+                MessageBox.Show("Untuk pembayaran kredit, minimal harus ada pembayaran DP!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Validasi untuk tunai - harus bayar penuh
+            if (metodePembayaran == "tunai" && jumlahBayar < totalTransaksi)
+            {
+                MessageBox.Show("Jumlah bayar kurang untuk pembayaran tunai!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            ShowLoading();
+
             try
             {
-                var barangMasuk = dgBarangMasuk.Items.Cast<BarangMasuk>().ToList();
+                await SimpanTransaksi(metodePembayaran, namaPelanggan, jumlahBayar);
+                ShowSuccessMessage("Transaksi berhasil disimpan!");
 
-                using (var workbook = new XLWorkbook())
-                {
-                    var worksheet = workbook.Worksheets.Add("Barang Masuk");
-
-                    // Header
-                    worksheet.Cell(1, 1).Value = $"Laporan Barang Masuk - {DateTime.Now:dd/MM/yyyy}";
-                    worksheet.Cell(1, 1).Style.Font.Bold = true;
-                    worksheet.Cell(1, 1).Style.Font.FontSize = 16;
-
-                    // Column headers
-                    worksheet.Cell(3, 1).Value = "No.";
-                    worksheet.Cell(3, 2).Value = "Waktu";
-                    worksheet.Cell(3, 3).Value = "Barcode";
-                    worksheet.Cell(3, 4).Value = "Nama Produk";
-                    worksheet.Cell(3, 5).Value = "Supplier";
-                    worksheet.Cell(3, 6).Value = "Qty";
-                    worksheet.Cell(3, 7).Value = "Harga Beli";
-                    worksheet.Cell(3, 8).Value = "Total";
-                    worksheet.Cell(3, 9).Value = "Status";
-
-                    // Style header
-                    var headerRange = worksheet.Range(3, 1, 3, 9);
-                    headerRange.Style.Font.Bold = true;
-                    headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
-                    headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-
-                    // Data
-                    int row = 4;
-                    for (int i = 0; i < barangMasuk.Count; i++)
-                    {
-                        var item = barangMasuk[i];
-                        worksheet.Cell(row + i, 1).Value = i + 1;
-                        worksheet.Cell(row + i, 2).Value = item.Waktu;
-                        worksheet.Cell(row + i, 3).Value = item.Barcode;
-                        worksheet.Cell(row + i, 4).Value = item.NamaProduk;
-                        worksheet.Cell(row + i, 5).Value = item.Supplier;
-                        worksheet.Cell(row + i, 6).Value = item.Quantity;
-                        worksheet.Cell(row + i, 7).Value = item.HargaBeli;
-                        worksheet.Cell(row + i, 8).Value = item.Total;
-                        worksheet.Cell(row + i, 9).Value = item.IsKredit ? "Kredit" : "Tunai";
-                    }
-
-                    // Format currency columns
-                    var hargaBeliRange = worksheet.Range(4, 7, row + barangMasuk.Count - 1, 7);
-                    hargaBeliRange.Style.NumberFormat.Format = "#,##0";
-
-                    var totalRange = worksheet.Range(4, 8, row + barangMasuk.Count - 1, 8);
-                    totalRange.Style.NumberFormat.Format = "#,##0";
-
-                    // Auto fit columns
-                    worksheet.ColumnsUsed().AdjustToContents();
-
-                    // Add borders to data
-                    var dataRange = worksheet.Range(3, 1, row + barangMasuk.Count - 1, 9);
-                    dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
-
-                    workbook.SaveAs(filePath);
-                }
-
-                MessageBox.Show("Berhasil mengekspor laporan barang masuk ke Excel!", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Reset form
+                await Task.Delay(2000);
+                ResetForm();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal mengekspor ke Excel: " + ex.Message);
+                MessageBox.Show($"Error saving transaction: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                HideLoading();
             }
         }
-        // Event handlers untuk quantity dan harga beli textbox
-        private void TxtModalQuantity_TextChanged(object sender, TextChangedEventArgs e)
+
+        private async Task SimpanTransaksi(string metodePembayaran, string namaPelanggan, decimal jumlahBayar)
         {
-            // Pastikan semua kontrol sudah siap sebelum update
-            if (IsLoaded && txtModalHargaBeli != null && txtModalTotal != null)
+            using (MySqlConnection conn = Helpers.DatabaseHelper.GetConnection())
             {
-                UpdateModalTotal();
+
+                using (MySqlTransaction transaction = await conn.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        // Insert transactions
+                        foreach (var item in keranjangItems)
+                        {
+                            string insertQuery = @"INSERT INTO transactions 
+                                                 (kode_transaksi, kode_product, nama, qty, harga, subtotal, 
+                                                  mark_up, laba, payment, namaPelanggan, Tunai, status, 
+                                                  tanggal_transaksi, tgl_pelunasan) 
+                                                 VALUES 
+                                                 (@kode_transaksi, @kode_product, @nama, @qty, @harga, @subtotal, 
+                                                  @mark_up, @laba, @payment, @namaPelanggan, @tunai, @status, 
+                                                  @tanggal_transaksi, @tgl_pelunasan)";
+
+                            MySqlCommand cmd = new MySqlCommand(insertQuery, conn, transaction);
+                            cmd.Parameters.AddWithValue("@kode_transaksi", currentTransactionCode);
+                            cmd.Parameters.AddWithValue("@kode_product", item.Barcode);
+                            cmd.Parameters.AddWithValue("@nama", item.NamaProduk);
+                            cmd.Parameters.AddWithValue("@qty", item.Quantity);
+                            cmd.Parameters.AddWithValue("@harga", item.HargaJual);
+                            cmd.Parameters.AddWithValue("@subtotal", item.Subtotal);
+                            cmd.Parameters.AddWithValue("@mark_up", item.MarkUp);
+                            cmd.Parameters.AddWithValue("@laba", (item.HargaJual - item.HargaBeli) * item.Quantity);
+                            cmd.Parameters.AddWithValue("@payment", metodePembayaran);
+                            cmd.Parameters.AddWithValue("@namaPelanggan", namaPelanggan);
+                            cmd.Parameters.AddWithValue("@tunai", jumlahBayar);
+
+                            // Status berdasarkan pembayaran
+                            string status;
+                            if (metodePembayaran == "kredit")
+                            {
+                                status = jumlahBayar >= totalTransaksi ? "Lunas" : "Belum Lunas";
+                            }
+                            else
+                            {
+                                status = "Lunas";
+                            }
+                            cmd.Parameters.AddWithValue("@status", status);
+                            cmd.Parameters.AddWithValue("@tanggal_transaksi", DateTime.Now);
+                            cmd.Parameters.AddWithValue("@tgl_pelunasan", status == "Lunas" ? DateTime.Now : (DateTime?)null);
+
+                            await cmd.ExecuteNonQueryAsync();
+
+                            // Update stock
+                            string updateStockQuery = @"UPDATE products 
+                                                      SET stok = stok - @qty,
+                                                          pendapatan = pendapatan + @subtotal,
+                                                          laba = laba + @laba
+                                                      WHERE barcode = @barcode";
+
+                            MySqlCommand stockCmd = new MySqlCommand(updateStockQuery, conn, transaction);
+                            stockCmd.Parameters.AddWithValue("@qty", item.Quantity);
+                            stockCmd.Parameters.AddWithValue("@subtotal", item.Subtotal);
+                            stockCmd.Parameters.AddWithValue("@laba", (item.HargaJual - item.HargaBeli) * item.Quantity);
+                            stockCmd.Parameters.AddWithValue("@barcode", item.Barcode);
+
+                            await stockCmd.ExecuteNonQueryAsync();
+                        }
+
+                        // Jika kredit dan belum lunas, masukkan ke tabel pembayaran
+                        if (metodePembayaran == "kredit" && jumlahBayar < totalTransaksi)
+                        {
+                            string insertPembayaranQuery = @"INSERT INTO pembayaran 
+                                                           (tgl_pembelian, tunai, tgl_pembayaran, kode_transaksi, jenis) 
+                                                           VALUES 
+                                                           (@tgl_pembelian, @tunai, @tgl_pembayaran, @kode_transaksi, @jenis)";
+
+                            MySqlCommand pembayaranCmd = new MySqlCommand(insertPembayaranQuery, conn, transaction);
+                            pembayaranCmd.Parameters.AddWithValue("@tgl_pembelian", DateTime.Now.Date);
+                            pembayaranCmd.Parameters.AddWithValue("@tunai", jumlahBayar);
+                            pembayaranCmd.Parameters.AddWithValue("@tgl_pembayaran", DateTime.Now);
+                            pembayaranCmd.Parameters.AddWithValue("@kode_transaksi", currentTransactionCode);
+                            pembayaranCmd.Parameters.AddWithValue("@jenis", "piutang");
+
+                            await pembayaranCmd.ExecuteNonQueryAsync();
+                        }
+
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
             }
         }
-        private void TxtModalHargaBeli_TextChanged(object sender, TextChangedEventArgs e)
+
+        private void BtnCetak_Click(object sender, RoutedEventArgs e)
         {
-            // Pastikan semua kontrol sudah siap sebelum update
-            if (IsLoaded && txtModalQuantity != null && txtModalTotal != null)
+            if (keranjangItems.Count == 0)
             {
-                UpdateModalTotal();
+                MessageBox.Show("Keranjang kosong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
+
+            PrintStruk();
+        }
+
+        private void PrintStruk()
+        {
+            try
+            {
+                PrintDocument printDoc = new PrintDocument();
+                printDoc.PrintPage += PrintDoc_PrintPage;
+                printDoc.Print();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error printing: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void PrintDoc_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            Font headerFont = new Font("Arial", 12, System.Drawing.FontStyle.Bold);
+            Font normalFont = new Font("Arial", 10);
+            Font smallFont = new Font("Arial", 8);
+
+            SolidBrush brush = new SolidBrush(Color.Black);
+
+            float yPos = 10;
+            float leftMargin = 10;
+            float rightMargin = e.PageBounds.Width - 10;
+
+            // Header
+            e.Graphics.DrawString("COKRO STORE", headerFont, brush, leftMargin, yPos);
+            yPos += 20;
+            e.Graphics.DrawString("Jl. Contoh No. 123", normalFont, brush, leftMargin, yPos);
+            yPos += 15;
+            e.Graphics.DrawString("Telp: 021-12345678", normalFont, brush, leftMargin, yPos);
+            yPos += 25;
+
+            // Line separator
+            e.Graphics.DrawLine(new Pen(Color.Black), leftMargin, yPos, rightMargin - 150, yPos);
+            yPos += 10;
+
+            // Transaction info
+            e.Graphics.DrawString($"No. Transaksi: {currentTransactionCode}", normalFont, brush, leftMargin, yPos);
+            yPos += 15;
+            e.Graphics.DrawString($"Tanggal: {DateTime.Now:dd/MM/yyyy HH:mm:ss}", normalFont, brush, leftMargin, yPos);
+            yPos += 15;
+            e.Graphics.DrawString($"Kasir: Kasir User", normalFont, brush, leftMargin, yPos);
+            yPos += 20;
+
+            // Line separator
+            e.Graphics.DrawLine(new Pen(Color.Black), leftMargin, yPos, rightMargin - 150, yPos);
+            yPos += 10;
+
+            // Items
+            foreach (var item in keranjangItems)
+            {
+                e.Graphics.DrawString(item.NamaProduk, normalFont, brush, leftMargin, yPos);
+                yPos += 15;
+                e.Graphics.DrawString($"{item.Quantity} x Rp {item.HargaJual:N0}", smallFont, brush, leftMargin + 10, yPos);
+                e.Graphics.DrawString($"Rp {item.Subtotal:N0}", smallFont, brush, rightMargin - 200, yPos);
+                yPos += 20;
+            }
+
+            // Line separator
+            e.Graphics.DrawLine(new Pen(Color.Black), leftMargin, yPos, rightMargin - 150, yPos);
+            yPos += 10;
+
+            // Total
+            e.Graphics.DrawString($"Total: Rp {totalTransaksi:N0}", headerFont, brush, leftMargin, yPos);
+            yPos += 20;
+
+            if (decimal.TryParse(txtJumlahBayar.Text, out decimal jumlahBayar))
+            {
+                string metodePembayaran = ((ComboBoxItem)cmbMetodePembayaran.SelectedItem)?.Content?.ToString();
+
+                e.Graphics.DrawString($"Bayar ({metodePembayaran}): Rp {jumlahBayar:N0}", normalFont, brush, leftMargin, yPos);
+                yPos += 15;
+
+                if (metodePembayaran == "Kredit")
+                {
+                    decimal sisaPembayaran = totalTransaksi - jumlahBayar;
+                    if (sisaPembayaran > 0)
+                    {
+                        e.Graphics.DrawString($"Sisa: Rp {sisaPembayaran:N0}", normalFont, brush, leftMargin, yPos);
+                        yPos += 15;
+                        e.Graphics.DrawString($"Pelanggan: {txtNamaPelanggan.Text}", normalFont, brush, leftMargin, yPos);
+                        yPos += 15;
+                    }
+                    else if (sisaPembayaran < 0)
+                    {
+                        e.Graphics.DrawString($"Kembalian: Rp {Math.Abs(sisaPembayaran):N0}", normalFont, brush, leftMargin, yPos);
+                        yPos += 15;
+                    }
+                }
+                else
+                {
+                    e.Graphics.DrawString($"Kembalian: Rp {jumlahBayar - totalTransaksi:N0}", normalFont, brush, leftMargin, yPos);
+                    yPos += 15;
+                }
+            }
+
+            yPos += 10;
+
+            // Footer
+            e.Graphics.DrawString("Terima kasih atas kunjungan Anda!", normalFont, brush, leftMargin, yPos);
+            yPos += 15;
+            e.Graphics.DrawString("Barang yang sudah dibeli tidak dapat dikembalikan", smallFont, brush, leftMargin, yPos);
+        }
+
+        private void ShowLoading()
+        {
+            loadingOverlay.Visibility = Visibility.Visible;
+        }
+
+        private void HideLoading()
+        {
+            loadingOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShowSuccessMessage(string message)
+        {
+            txtSuccessMessage.Text = message;
+            successMessage.Visibility = Visibility.Visible;
+        }
+
+        private void ResetForm()
+        {
+            keranjangItems.Clear();
+            txtBarcode.Clear();
+            txtJumlahBayar.Clear();
+            txtNamaPelanggan.Clear();
+            cmbMetodePembayaran.SelectedIndex = 0;
+            GenerateTransactionCode();
+            successMessage.Visibility = Visibility.Collapsed;
+            txtBarcode.Focus();
         }
 
         // Navigation methods
         private void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
-            DashboardAdmin dashboard = new DashboardAdmin();
+            Views.Admin.DashboardAdmin dashboard = new Views.Admin.DashboardAdmin();
             dashboard.Show();
             this.Close();
         }
 
         private void Product_Click(object sender, RoutedEventArgs e)
         {
-            ProductsPage products = new ProductsPage();
+            Views.Admin.ProductsPage products = new Views.Admin.ProductsPage();
             products.Show();
             this.Close();
         }
 
         private void BrngMasuk_Click(object sender, RoutedEventArgs e)
         {
-            // Already on this page
+            Views.Admin.BarangMasukPage barangMasuk = new Views.Admin.BarangMasukPage();
+            barangMasuk.Show();
+            this.Close();
+        }
+        private void BrngKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            Views.Admin.BarangKeluarPage barangMasuk = new Views.Admin.BarangKeluarPage();
+            barangMasuk.Show();
+            this.Close();
         }
 
         private void Supplier_Click(object sender, RoutedEventArgs e)
         {
-            SuppliersPage suppliers = new SuppliersPage();
+            Views.Admin.SuppliersPage suppliers = new Views.Admin.SuppliersPage();
             suppliers.Show();
             this.Close();
         }
 
+        private void Kas_Click(object sender, RoutedEventArgs e)
+        {
+            KasPage kasPage = new KasPage();
+            kasPage.Show();
+            this.Close();
+        }
+
+        private void TransactionMasuk_Click(object sender, RoutedEventArgs e)
+        {
+            TransactionMasukPage transactionMasuk = new TransactionMasukPage();
+            transactionMasuk.Show();
+            this.Close();
+        }
+
+        private void TransactionKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to Transaction Keluar page
+            var transactionKeluarWindow = new TransactionKeluarPage();
+            transactionKeluarWindow.Show();
+            this.Close();
+        }
+
+        private void Pihutang_Click(object sender, RoutedEventArgs e)
+        {
+            PihutangPage pihutangPage = new PihutangPage();
+            pihutangPage.Show();
+            this.Close();
+        }
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("Yakin ingin logout?", "Konfirmasi",
-                                 MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
+            if (MessageBox.Show("Apakah Anda yakin ingin logout?", "Konfirmasi", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                LoginWindow login = new LoginWindow();
-                login.Show();
+                // Navigate to login page
+                var loginPage = new LoginWindow();
+                loginPage.Show();
                 this.Close();
             }
         }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
-    // Model untuk data barang masuk
-    public class BarangMasuk
+    // Model classes
+    public class KeranjangItem : INotifyPropertyChanged
     {
-        public int Id { get; set; }
-        public string Waktu { get; set; }
+        private int _quantity;
+        private decimal _subtotal;
+
         public string Barcode { get; set; }
         public string NamaProduk { get; set; }
-        public string Supplier { get; set; }
-        public int Quantity { get; set; }
+        public decimal HargaJual { get; set; }
         public decimal HargaBeli { get; set; }
-        public decimal Total { get; set; }
-        public bool IsKredit { get; set; }
+        public decimal MarkUp { get; set; }
+        public int SupplierId { get; set; }
+
+        public int Quantity
+        {
+            get => _quantity;
+            set
+            {
+                _quantity = value;
+                UpdateSubtotal();
+                OnPropertyChanged(nameof(Quantity));
+            }
+        }
+
+        public decimal Subtotal
+        {
+            get => _subtotal;
+            private set
+            {
+                _subtotal = value;
+                OnPropertyChanged(nameof(Subtotal));
+            }
+        }
+
+        public void UpdateSubtotal()
+        {
+            Subtotal = HargaJual * Quantity;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
-    // Model untuk Supplier (jika belum ada)
-    public class Supplier
+    public class ProdukItem
     {
         public int Id { get; set; }
+        public string Barcode { get; set; }
+        public string NamaProduk { get; set; }
+        public decimal HargaJual { get; set; }
+        public decimal HargaBeli { get; set; }
+        public decimal MarkUp { get; set; }
+        public int Stok { get; set; }
+        public int SupplierId { get; set; }
         public string NamaSupplier { get; set; }
-        public string Kontak { get; set; }
-        public string Alamat { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
     }
 }

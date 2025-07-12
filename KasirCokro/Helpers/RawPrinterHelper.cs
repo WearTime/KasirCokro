@@ -1,7 +1,7 @@
 ﻿using KasirCokro.Views.Kasir;
 using System;
 using System.Collections.Generic;
-using System.Drawing; // untuk Font, Brushes, Graphics, PaperSize
+using System.Drawing;
 using System.Drawing.Printing;
 using System.Windows;
 

@@ -51,6 +51,33 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="ReadOnlyInput" TargetType="TextBox">
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#F9FAFB"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8">
+                            <ScrollViewer Name="PART_ContentHost" 
+                                  VerticalAlignment="Center"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <!-- Modern Button Style -->
         <Style x:Key="ModernButton" TargetType="Button">
             <Setter Property="Background" Value="#007BFF"/>
@@ -81,6 +108,86 @@
             </Setter>
         </Style>
 
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <Grid>
+                                <ToggleButton Grid.Column="0" 
+                                              Background="Transparent"
+                                              BorderThickness="0"
+                                              IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                              ClickMode="Press">
+                                    <Grid>
+                                        <ContentPresenter Name="ContentSite" 
+                                                          IsHitTestVisible="False"
+                                                          Content="{TemplateBinding SelectionBoxItem}"
+                                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                          Margin="16,0,30,0"
+                                                          VerticalAlignment="Center"
+                                                          HorizontalAlignment="Left"/>
+                                        <Path Name="Arrow" 
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Data="M 0 0 L 4 4 L 8 0 Z"
+                                              Fill="#6B7280"
+                                              Margin="0,0,16,0"/>
+                                    </Grid>
+                                </ToggleButton>
+                                <Popup Name="Popup" 
+                                       Placement="Bottom"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                                       AllowsTransparency="True"
+                                       Focusable="False"
+                                       PopupAnimation="Slide">
+                                    <Grid Name="DropDown" 
+                                          SnapsToDevicePixels="True"
+                                          MinWidth="{TemplateBinding ActualWidth}"
+                                          MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                        <Border Name="DropDownBorder"
+                                                Background="White"
+                                                BorderThickness="1"
+                                                BorderBrush="#CBD5E1"
+                                                CornerRadius="8"/>
+                                        <ScrollViewer Margin="4,6,4,6" 
+                                                      SnapsToDevicePixels="True">
+                                            <ItemsPresenter Name="ItemsPresenter" 
+                                                            KeyboardNavigation.DirectionalNavigation="Contained"
+                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#3B82F6"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="#94A3B8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Secondary Button Style -->
         <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
             <Setter Property="Background" Value="#6C757D"/>
@@ -103,7 +210,8 @@
 
         <!-- Modern TextBox Style -->
         <Style x:Key="ModernTextBox" TargetType="TextBox">
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Padding" Value="12,6.7"/>
             <Setter Property="BorderBrush" Value="#DEE2E6"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="White"/>
@@ -232,72 +340,121 @@
         <!-- Sidebar -->
         <Border Background="White" Width="240" HorizontalAlignment="Left" 
                 BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
-            <StackPanel Margin="0,16,0,0">
-                <!-- Logo/Brand -->
-                <StackPanel Margin="16,0,16,20">
-                    <StackPanel Orientation="Horizontal">
-                        <Border Background="#3B82F6" CornerRadius="6" Width="28" Height="28" Margin="0,0,10,0">
-                            <TextBlock Text="🏪" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="CokroApp" FontSize="16" FontWeight="Bold" Foreground="#111827"/>
-                            <TextBlock Text="Admin Panel" FontSize="10" Foreground="#6B7280"/>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-
-                <!-- Navigation Menu -->
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="NAVIGATION" FontSize="10" FontWeight="SemiBold" 
-                               Foreground="#9CA3AF" Margin="16,0,16,8"/>
-
-                    <Button Style="{StaticResource SidebarButton}" Click="BtnDashboard_Click">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="0,16,0,0">
+                    <!-- Logo/Brand -->
+                    <StackPanel Margin="16,0,16,20">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📊" FontSize="14" Margin="0,0,10,0"/>
-                            <TextBlock Text="Dashboard" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource SidebarButton}" Click="Product_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📦" FontSize="14" Margin="0,0,10,0"/>
-                            <TextBlock Text="Data Produk" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource SidebarButton}" Click="Supplier_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🏭" FontSize="14" Margin="0,0,10,0"/>
-                            <TextBlock Text="Data Supplier" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource ActiveSidebarButton}" Click="BrngMasuk_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📥" FontSize="14" Margin="0,0,10,0"/>
-                            <TextBlock Text="Barang Masuk" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-
-                <!-- User Section -->
-                <Border Background="#F8FAFC" CornerRadius="8" Margin="16,0,16,16" Padding="12">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                            <Ellipse Width="24" Height="24" Fill="#3B82F6" Margin="0,0,8,0"/>
+                            <Border Background="#3B82F6" CornerRadius="6" Width="28" Height="28" Margin="0,0,10,0">
+                                <TextBlock Text="🏪" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Admin User" FontSize="12" FontWeight="SemiBold" Foreground="#111827"/>
-                                <TextBlock Text="Administrator" FontSize="10" Foreground="#6B7280"/>
+                                <TextBlock Text="CokroApp" FontSize="16" FontWeight="Bold" Foreground="#111827"/>
+                                <TextBlock Text="Admin Panel" FontSize="10" Foreground="#6B7280"/>
                             </StackPanel>
                         </StackPanel>
-                        <Button Content="Logout" Background="Transparent" Foreground="#EF4444" 
-                                BorderThickness="0" FontSize="10" HorizontalAlignment="Left" 
-                                Padding="0" Cursor="Hand" Click="Logout_Click"/>
                     </StackPanel>
-                </Border>
-            </StackPanel>
-        </Border>
 
+                    <!-- Main Navigation Menu -->
+                    <StackPanel Margin="0,0,0,16">
+                        <TextBlock Text="MAIN" FontSize="10" FontWeight="SemiBold" 
+                                   Foreground="#9CA3AF" Margin="16,0,16,8"/>
+
+                        <Button Style="{StaticResource SidebarButton}" Click="BtnDashboard_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📊" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Dashboard" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButton}" Click="Product_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📦" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Data Produk" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButton}" Click="Supplier_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🏭" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Data Supplier" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource ActiveSidebarButton}" Click="BrngMasuk_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📥" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Barang Masuk" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButton}" Click="BrngKeluar_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📤" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Barang Keluar" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButton}" Click="Kas_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="💳" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Kas" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Reports Section -->
+                    <StackPanel Margin="0,0,0,16">
+                        <TextBlock Text="LAPORAN" FontSize="10" FontWeight="SemiBold" 
+                                   Foreground="#9CA3AF" Margin="16,0,16,8"/>
+
+                        <Button Style="{StaticResource SidebarButton}" Click="TransactionMasuk_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📊" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Transaksi Masuk" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButton}" Click="TransactionKeluar_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📈" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Transaksi Keluar" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButton}" >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="💸" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Hutang" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButton}"  Click="Pihutang_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="💰" FontSize="14" Margin="0,0,10,0"/>
+                                <TextBlock Text="Piutang" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- User Section -->
+                    <Border Background="#F8FAFC" CornerRadius="8" Margin="16,0,16,16" Padding="12">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <Ellipse Width="24" Height="24" Fill="#3B82F6" Margin="0,0,8,0"/>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Admin User" FontSize="12" FontWeight="SemiBold" Foreground="#111827"/>
+                                    <TextBlock Text="Administrator" FontSize="10" Foreground="#6B7280"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <Button Content="Logout" Background="Transparent" Foreground="#EF4444" 
+                                    BorderThickness="0" FontSize="10" HorizontalAlignment="Left" 
+                                    Padding="0" Cursor="Hand" Click="Logout_Click"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
         <!-- Main Content -->
         <Grid Margin="240,0,0,0">
             <!-- Top Bar -->
@@ -587,6 +744,12 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
                                     <!-- Barcode -->
@@ -609,12 +772,47 @@
                                         <TextBox x:Name="txtManualStok" Style="{StaticResource ModernTextBox}" 
                                          Text="0" />
                                     </StackPanel>
+                                    
+                                    <StackPanel Grid.Row="3" Margin="0,0,0,12">
+                                        <TextBlock Text="Stok Awal:" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBox x:Name="txtManualStokAwal" Style="{StaticResource ModernTextBox}" 
+                                         Text="0" />
+                                    </StackPanel>
 
                                     <!-- Supplier -->
-                                    <StackPanel Grid.Row="3" Margin="0,0,0,0">
+                                    <StackPanel Grid.Row="4" Margin="0,0,0,0">
                                         <TextBlock Text="Supplier:" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                        <TextBox x:Name="txtManualSupplier" Style="{StaticResource ModernTextBox}" />
+                                        <ComboBox x:Name="txtManualSupplier" 
+                                          Style="{StaticResource ModernComboBox}"
+                                          DisplayMemberPath="NamaSupplier"
+                                          SelectedValuePath="Id"
+                                          ToolTip="Pilih supplier"/>
                                     </StackPanel>
+                                    
+                                    <StackPanel Grid.Row="5" Margin="0,0,0,12">
+                                        <TextBlock Text="Laba" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBox x:Name="txtManualLaba" Style="{StaticResource ModernTextBox}" 
+                                         Text="0" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="6" Margin="0,0,0,12">
+                                        <TextBlock Text="Mark up:" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBox x:Name="txtManualMarkUp" Style="{StaticResource ModernTextBox}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="7" Margin="0,0,0,12">
+                                        <TextBlock Text="Persentase:" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBox x:Name="txtManualPercntage" Style="{StaticResource ReadOnlyInput}" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="8" Margin="0,0,0,12">
+                                        <TextBlock Text="Harta:" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBox x:Name="txtManualHarta" Style="{StaticResource ModernTextBox}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="9" Margin="0,0,0,12">
+                                        <TextBlock Text="Pendapatan:" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                        <TextBox x:Name="txtManualPendapatan" Style="{StaticResource ModernTextBox}"/>
+                                    </StackPanel>
+
                                 </Grid>
                             </Border>
 
@@ -636,6 +834,13 @@
                                     <TextBox x:Name="txtManualHargaBeli" Style="{StaticResource ModernTextBox}" 
                                      TextChanged="TxtManualHargaBeli_TextChanged" Text="1"/>
                                 </StackPanel>
+
+                                <StackPanel Margin="0,0,0,12">
+                                    <TextBlock Text="Harga Jual:" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                    <TextBox x:Name="txtManualHargaJual" Style="{StaticResource ModernTextBox}" 
+                                     Text="1" TextChanged="TxtManualHargaJual_TextChanged"/>
+                                </StackPanel>
+                                
 
                                 <!-- Checkbox Kredit -->
                                 <CheckBox x:Name="chkManualKredit" Content="Pembelian Kredit" FontWeight="SemiBold" 

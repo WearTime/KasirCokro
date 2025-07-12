@@ -139,11 +139,44 @@ namespace KasirCokro.Views.Admin
             barangMasuk.Show();
             this.Close();
         }
+        private void BrngKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            Views.Admin.BarangKeluarPage barangMasuk = new Views.Admin.BarangKeluarPage();
+            barangMasuk.Show();
+            this.Close();
+        }
 
         private void Supplier_Click(object sender, RoutedEventArgs e)
         {
             Views.Admin.SuppliersPage suppliers = new Views.Admin.SuppliersPage();
             suppliers.Show();
+            this.Close();
+        }
+
+        private void Kas_Click(object sender, RoutedEventArgs e)
+        {
+            KasPage kasPage = new KasPage();
+            kasPage.Show();
+            this.Close();
+        }
+        private void TransactionMasuk_Click(object sender, RoutedEventArgs e)
+        {
+            TransactionMasukPage transactionMasuk = new TransactionMasukPage();
+            transactionMasuk.Show();
+            this.Close();
+        }
+
+        private void TransactionKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            var transactionKeluarWindow = new TransactionKeluarPage();
+            transactionKeluarWindow.Show();
+            this.Close();
+        }
+
+        private void Pihutang_Click(object sender, RoutedEventArgs e)
+        {
+            PihutangPage pihutangPage = new PihutangPage();
+            pihutangPage.Show();
             this.Close();
         }
         private void Logout_Click(object sender, RoutedEventArgs e)
@@ -181,14 +214,12 @@ namespace KasirCokro.Views.Admin
                             return;
                         }
 
-                        int row = 2; // Mulai dari baris ke-2, baris ke-1 untuk header
-                        while (worksheet.Cells[row, 1].Value != null)
+                        int row = 2; while (worksheet.Cells[row, 1].Value != null)
                         {
                             string nama = worksheet.Cells[row, 1].Text;
                             string alamat = worksheet.Cells[row, 2].Text;
                             string telepon = worksheet.Cells[row, 3].Text;
 
-                            // Simpan ke database
                             using (var conn = Helpers.DatabaseHelper.GetConnection())
                             {
                                 string query = "INSERT INTO suppliers (nama, alamat, telepon) VALUES (@nama, @alamat, @telepon)";

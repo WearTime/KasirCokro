@@ -193,8 +193,7 @@ namespace KasirCokro.Views.Kasir
             {
                 var random = new Random();
 
-                // Sample transaction info
-                TransaksiInfo = new TransaksiDetailModel
+                                TransaksiInfo = new TransaksiDetailModel
                 {
                     TransaksiID = _transaksiId,
                     NoTransaksi = $"TRX-{DateTime.Now:yyyyMM}-{_transaksiId:D4}",
@@ -212,8 +211,7 @@ namespace KasirCokro.Views.Kasir
                     Catatan = "Transaksi sample untuk testing"
                 };
 
-                // Sample transaction items
-                Application.Current.Dispatcher.Invoke(() =>
+                                Application.Current.Dispatcher.Invoke(() =>
                 {
                     TransaksiItems.Clear();
                     var sampleItems = new[]
@@ -362,8 +360,7 @@ namespace KasirCokro.Views.Kasir
             set { _catatan = value; OnPropertyChanged(); }
         }
 
-        // Formatted Properties
-        public string TanggalFormatted => TanggalTransaksi.ToString("dd MMMM yyyy");
+                public string TanggalFormatted => TanggalTransaksi.ToString("dd MMMM yyyy");
         public string WaktuFormatted => TanggalTransaksi.ToString("HH:mm:ss");
         public string SubtotalFormatted => Subtotal.ToString("C0", new CultureInfo("id-ID"));
         public string PajakFormatted => PajakAmount.ToString("C0", new CultureInfo("id-ID"));
@@ -452,8 +449,7 @@ namespace KasirCokro.Views.Kasir
             set { _satuan = value; OnPropertyChanged(); }
         }
 
-        // Formatted Properties
-        public string HargaFormatted => HargaSatuan.ToString("C0", new CultureInfo("id-ID"));
+                public string HargaFormatted => HargaSatuan.ToString("C0", new CultureInfo("id-ID"));
         public string SubtotalFormatted => SubtotalItem.ToString("C0", new CultureInfo("id-ID"));
         public string DiskonFormatted => DiskonItem > 0 ? DiskonItem.ToString("C0", new CultureInfo("id-ID")) : "-";
 

@@ -38,7 +38,6 @@ namespace KasirCokro.Views.Admin
                 {
                     if (_supplier.Id == 0)
                     {
-                        // Insert
                         string query = "INSERT INTO suppliers (nama_supplier, kontak, alamat) VALUES (@nama, @kontak, @alamat)";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@nama", nama);
@@ -48,7 +47,6 @@ namespace KasirCokro.Views.Admin
                     }
                     else
                     {
-                        // Update
                         string query = "UPDATE suppliers SET nama_supplier=@nama, kontak=@kontak, alamat=@alamat WHERE id=@id";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@id", _supplier.Id);

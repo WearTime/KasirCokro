@@ -25,8 +25,7 @@ namespace KasirCokro.Views.Kasir
             InitializeComponent();
         }
 
-        // Kelas untuk menyimpan item di keranjang
-        public class KeranjangItem
+                public class KeranjangItem
         {
             public string Barcode { get; set; }
             public string NamaProduk { get; set; }
@@ -63,8 +62,7 @@ namespace KasirCokro.Views.Kasir
                         string nama = reader["nama_produk"].ToString();
                         decimal harga = Convert.ToDecimal(reader["harga_jual"]);
 
-                        // Cek apakah sudah ada di keranjang
-                        var item = keranjang.Find(i => i.Barcode == barcode);
+                                                var item = keranjang.Find(i => i.Barcode == barcode);
                         if (item != null)
                         {
                             item.Jumlah += 1;
@@ -114,14 +112,11 @@ namespace KasirCokro.Views.Kasir
                 return;
             }
 
-            // Simpan transaksi ke database
-            int transaksiId = SimpanTransaksiKeDatabase();
+                        int transaksiId = SimpanTransaksiKeDatabase();
 
-            // Cetak struk
-            CetakStruk(transaksiId);
+                        CetakStruk(transaksiId);
 
-            // Reset keranjang
-            keranjang.Clear();
+                        keranjang.Clear();
             dgKeranjang.ItemsSource = null;
             txtTotal.Text = "Rp 0";
         }
@@ -172,14 +167,12 @@ namespace KasirCokro.Views.Kasir
 
         private void BtnManual_Click(object sender, RoutedEventArgs e)
         {
-            // Bisa dibuat window tambah manual nanti
-            MessageBox.Show("Fitur tambah manual akan ditambahkan nanti.");
+                        MessageBox.Show("Fitur tambah manual akan ditambahkan nanti.");
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
-            // Reset keranjang dan UI
-            keranjang.Clear();
+                        keranjang.Clear();
             dgKeranjang.ItemsSource = null;
             txtTotal.Text = "Rp 0";
             txtBarcode.Clear();
@@ -211,9 +204,7 @@ namespace KasirCokro.Views.Kasir
 
             try
             {
-                // Simpan draft ke database atau file
-                // Implementasi bisa disesuaikan dengan kebutuhan
-                MessageBox.Show("Draft transaksi berhasil disimpan.");
+                                                MessageBox.Show("Draft transaksi berhasil disimpan.");
             }
             catch (Exception ex)
             {
@@ -228,14 +219,9 @@ namespace KasirCokro.Views.Kasir
 
             if (result == MessageBoxResult.Yes)
             {
-                // Tutup window ini dan kembali ke login
-                // Anda perlu menyesuaikan dengan struktur aplikasi Anda
-                this.Close();
+                                                this.Close();
 
-                // Contoh: buka window login
-                // var loginWindow = new Login();
-                // loginWindow.Show();
-            }
+                                                            }
         }
 
         private void BtnKosongkan_Click(object sender, RoutedEventArgs e)
@@ -261,8 +247,7 @@ namespace KasirCokro.Views.Kasir
 
         private void BtnHapus_Click(object sender, RoutedEventArgs e)
         {
-            // Hapus item yang dipilih dari keranjang
-            if (dgKeranjang.SelectedItem != null)
+                        if (dgKeranjang.SelectedItem != null)
             {
                 var selectedItem = (KeranjangItem)dgKeranjang.SelectedItem;
                 keranjang.Remove(selectedItem);
@@ -281,13 +266,11 @@ namespace KasirCokro.Views.Kasir
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            // Edit jumlah item yang dipilih
-            if (dgKeranjang.SelectedItem != null)
+                        if (dgKeranjang.SelectedItem != null)
             {
                 var selectedItem = (KeranjangItem)dgKeranjang.SelectedItem;
 
-                // Buat dialog sederhana untuk edit jumlah
-                string input = Microsoft.VisualBasic.Interaction.InputBox(
+                                string input = Microsoft.VisualBasic.Interaction.InputBox(
                     $"Masukkan jumlah untuk {selectedItem.NamaProduk}:",
                     "Edit Jumlah",
                     selectedItem.Jumlah.ToString());
@@ -335,15 +318,13 @@ namespace KasirCokro.Views.Kasir
 
             try
             {
-                // Hitung total
-                decimal total = 0;
+                                decimal total = 0;
                 foreach (var item in keranjang)
                 {
                     total += item.Subtotal;
                 }
 
-                // Buat dialog pembayaran sederhana
-                string input = Microsoft.VisualBasic.Interaction.InputBox(
+                                string input = Microsoft.VisualBasic.Interaction.InputBox(
                     $"Total: Rp {total:N0}\nMasukkan jumlah bayar:",
                     "Pembayaran",
                     total.ToString());
@@ -354,20 +335,16 @@ namespace KasirCokro.Views.Kasir
                     {
                         decimal kembalian = jumlahBayar - total;
 
-                        // Simpan transaksi
-                        int transaksiId = SimpanTransaksiKeDatabase();
+                                                int transaksiId = SimpanTransaksiKeDatabase();
 
-                        // Tampilkan info pembayaran
-                        MessageBox.Show($"Pembayaran berhasil!\n" +
+                                                MessageBox.Show($"Pembayaran berhasil!\n" +
                                       $"Total: Rp {total:N0}\n" +
                                       $"Bayar: Rp {jumlahBayar:N0}\n" +
                                       $"Kembalian: Rp {kembalian:N0}");
 
-                        // Cetak struk
-                        CetakStruk(transaksiId);
+                                                CetakStruk(transaksiId);
 
-                        // Reset keranjang
-                        keranjang.Clear();
+                                                keranjang.Clear();
                         dgKeranjang.ItemsSource = null;
                         txtTotal.Text = "Rp 0";
                         txtBarcode.Clear();

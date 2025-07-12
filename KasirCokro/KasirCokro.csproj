@@ -200,8 +200,29 @@
     </Compile>
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
+    <Compile Include="Views\Admin\AddPaymentHutang.xaml.cs">
+      <DependentUpon>AddPaymentHutang.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Admin\BarangKeluarPage.xaml.cs">
+      <DependentUpon>BarangKeluarPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Admin\DashboardAdmin.xaml.cs">
       <DependentUpon>DashboardAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Admin\DetailTransaksiWindow.xaml.cs">
+      <DependentUpon>DetailTransaksiWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Admin\TransactionKeluarPage.xaml.cs">
+      <DependentUpon>TransactionKeluarPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Admin\PihutangPage.xaml.cs">
+      <DependentUpon>PihutangPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Admin\TransactionMasukPage.xaml.cs">
+      <DependentUpon>TransactionMasukPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Admin\KasPage.xaml.cs">
+      <DependentUpon>KasPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Admin\ProductForm.xaml.cs">
       <DependentUpon>ProductForm.xaml</DependentUpon>
@@ -232,9 +253,6 @@
     </Compile>
     <Compile Include="Views\Kasir\TransaksiPenjualan.xaml.cs">
       <DependentUpon>TransaksiPenjualan.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Auth\LoginWindow2.xaml.cs">
-      <DependentUpon>LoginWindow2.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -276,7 +294,35 @@
     <Resource Include="Resources\user_icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\Admin\AddPaymentHutang.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Admin\BarangKeluarPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Admin\DashboardAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Admin\DetailTransaksiWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Admin\TransactionKeluarPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Admin\PihutangPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Admin\TransactionMasukPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Admin\KasPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -317,10 +363,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Kasir\TransaksiPenjualan.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Auth\LoginWindow2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -10,22 +10,11 @@ namespace KasirCokro.Helpers
 {
     public static class PasswordHelper
     {
-        /// <summary>
-        /// Hash password menggunakan BCrypt dengan work factor 12
-        /// </summary>
-        /// <param name="password">Password plain text</param>
-        /// <returns>Hashed password</returns>
         public static string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password, 12);
         }
 
-        /// <summary>
-        /// Verifikasi password dengan hash yang tersimpan
-        /// </summary>
-        /// <param name="password">Password plain text</param>
-        /// <param name="hashedPassword">Hashed password dari database</param>
-        /// <returns>True jika password cocok</returns>
         public static bool VerifyPassword(string password, string hashedPassword)
         {
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
@@ -34,10 +23,6 @@ namespace KasirCokro.Helpers
 
     public static class DatabasePasswordUpdater
     {
-        /// <summary>
-        /// Script untuk update semua password yang ada di database menjadi hash
-        /// JALANKAN SEKALI SAJA untuk migrasi dari plain text ke hash
-        /// </summary>
         public static async Task UpdateExistingPasswordsToHash()
         {
             try
@@ -47,7 +32,6 @@ namespace KasirCokro.Helpers
                     conn.Close();
                     await conn.OpenAsync();
 
-                    // Ambil semua user dengan password plain text
                     string selectQuery = "SELECT id, username, password FROM users";
                     MySqlCommand selectCmd = new MySqlCommand(selectQuery, conn);
 
@@ -66,7 +50,6 @@ namespace KasirCokro.Helpers
 
                         reader.Close();
 
-                        // Update setiap password menjadi hash
                         foreach (var user in usersToUpdate)
                         {
                             string hashedPassword = PasswordHelper.HashPassword(user.plainPassword);
@@ -92,9 +75,6 @@ namespace KasirCokro.Helpers
             }
         }
 
-        /// <summary>
-        /// Method untuk menambah user baru dengan password ter-hash
-        /// </summary>
         public static async Task<bool> CreateNewUser(string username, string password, string role)
         {
             try
@@ -104,7 +84,6 @@ namespace KasirCokro.Helpers
                     conn.Close();
                     await conn.OpenAsync();
 
-                    // Cek apakah username sudah ada
                     string checkQuery = "SELECT COUNT(*) FROM users WHERE username = @username";
                     MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn);
                     checkCmd.Parameters.AddWithValue("@username", username);
@@ -117,10 +96,8 @@ namespace KasirCokro.Helpers
                         return false;
                     }
 
-                    // Hash password sebelum menyimpan
                     string hashedPassword = PasswordHelper.HashPassword(password);
 
-                    // Insert user baru
                     string insertQuery = "INSERT INTO users (username, password, role) VALUES (@username, @password, @role)";
                     MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
                     insertCmd.Parameters.AddWithValue("@username", username);
@@ -147,18 +124,14 @@ namespace KasirCokro.Helpers
     }
 }
 
-// Contoh penggunaan untuk testing atau migrasi data
 public class Program
 {
     public static async Task Main(string[] args)
     {
         try
         {
-             await DatabasePasswordUpdater.UpdateExistingPasswordsToHash();
+            await DatabasePasswordUpdater.UpdateExistingPasswordsToHash();
 
-            // Contoh membuat user baru
-            //await DatabasePasswordUpdater.CreateNewUser("admin", "admin123", "admin");
-            //await DatabasePasswordUpdater.CreateNewUser("kasir1", "kasir123", "kasir");
 
             Console.WriteLine("Selesai!");
         }

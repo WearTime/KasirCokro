@@ -20,10 +20,8 @@ namespace KasirCokro.Models
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
-        // Display property
         public string DisplayText => $"{NamaSupplier} - {Kontak}";
 
-        // Constructor
         public Supplier()
         {
             CreatedAt = DateTime.Now;

@@ -343,11 +343,46 @@ namespace KasirCokro.Views.Admin
             barangMasuk.Show();
             this.Close();
         }
+        private void BrngKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            Views.Admin.BarangKeluarPage barangMasuk = new Views.Admin.BarangKeluarPage();
+            barangMasuk.Show();
+            this.Close();
+        }
 
         private void Supplier_Click(object sender, RoutedEventArgs e)
         {
             Views.Admin.SuppliersPage suppliers = new Views.Admin.SuppliersPage();
             suppliers.Show();
+            this.Close();
+        }
+
+        private void Kas_Click(object sender, RoutedEventArgs e)
+        {
+            KasPage kasPage = new KasPage();
+            kasPage.Show();
+            this.Close();
+        }
+
+        private void TransactionMasuk_Click(object sender, RoutedEventArgs e)
+        {
+            TransactionMasukPage transactionMasuk = new TransactionMasukPage();
+            transactionMasuk.Show();
+            this.Close();
+        }
+
+        private void TransactionKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to Transaction Keluar page
+            var transactionKeluarWindow = new TransactionKeluarPage();
+            transactionKeluarWindow.Show();
+            this.Close();
+        }
+
+        private void Pihutang_Click(object sender, RoutedEventArgs e)
+        {
+            PihutangPage pihutangPage = new PihutangPage();
+            pihutangPage.Show();
             this.Close();
         }
 

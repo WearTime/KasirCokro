@@ -46,12 +46,10 @@ namespace KasirCokro.Views.Admin
                     }
                 }
 
-                // Tampilkan ke UI
                 txtTotalProduk.Text = $"{totalProduk}";
                 txtStokRendah.Text = $"{stokHampirHabis}";
                 txtHabisStok.Text = $"{stokHabis}";
-                
-                // Update label jumlah data
+
                 txtJumlahData.Text = $"Menampilkan {totalProduk} dari {totalProduk} data";
             }
             catch (Exception ex)
@@ -161,7 +159,7 @@ namespace KasirCokro.Views.Admin
         {
             if (dgProduk.SelectedItem is Product selected)
             {
-                if (MessageBox.Show($"Yakin ingin menghapus produk '{selected.NamaProduk}'?", 
+                if (MessageBox.Show($"Yakin ingin menghapus produk '{selected.NamaProduk}'?",
                     "Konfirmasi", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     HapusProduk(selected.Id);
@@ -201,9 +199,9 @@ namespace KasirCokro.Views.Admin
                     string query = "DELETE FROM products WHERE id = @id";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@id", id);
-                    
+
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    
+
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Produk berhasil dihapus!", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -238,7 +236,7 @@ namespace KasirCokro.Views.Admin
         {
             try
             {
-                    int successCount = 0;
+                int successCount = 0;
                 FileInfo fileInfo = new FileInfo(filePath);
                 using (var package = new ExcelPackage(fileInfo))
                 {
@@ -254,8 +252,7 @@ namespace KasirCokro.Views.Admin
                             decimal hargaBeli = Convert.ToDecimal(ws.Cells[i, 3].Value);
                             decimal hargaJual = Convert.ToDecimal(ws.Cells[i, 4].Value);
                             int stok = Convert.ToInt32(ws.Cells[i, 5].Value);
-                            int supplierId = Convert.ToInt32(ws.Cells[i, 6].Value ?? 1); // Default supplier ID = 1
-
+                            int supplierId = Convert.ToInt32(ws.Cells[i, 6].Value ?? 1);
                             if (!string.IsNullOrEmpty(barcode) && !string.IsNullOrEmpty(nama))
                             {
                                 SimpanProduk(new Product
@@ -278,14 +275,14 @@ namespace KasirCokro.Views.Admin
                     }
                 }
 
-                MessageBox.Show($"Berhasil import {successCount} produk dari Excel!", 
+                MessageBox.Show($"Berhasil import {successCount} produk dari Excel!",
                     "Import Berhasil", MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadDataProduk();
                 TampilkanStatistikProduk();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal import dari Excel: " + ex.Message, 
+                MessageBox.Show("Gagal import dari Excel: " + ex.Message,
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -315,7 +312,7 @@ namespace KasirCokro.Views.Admin
                 cmd.Parameters.AddWithValue("@stok", product.Stok);
                 cmd.Parameters.AddWithValue("@stokawal", product.StokAwal);
                 cmd.Parameters.AddWithValue("@supplierid", product.SupplierId);
-                
+
                 if (product.Id != 0)
                 {
                     cmd.Parameters.AddWithValue("@id", product.Id);
@@ -325,7 +322,6 @@ namespace KasirCokro.Views.Admin
             }
         }
 
-        // Navigation event handlers
         private void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
             Views.Admin.DashboardAdmin dashboard = new Views.Admin.DashboardAdmin();
@@ -346,6 +342,12 @@ namespace KasirCokro.Views.Admin
             barangMasuk.Show();
             this.Close();
         }
+        private void BrngKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            Views.Admin.BarangKeluarPage barangMasuk = new Views.Admin.BarangKeluarPage();
+            barangMasuk.Show();
+            this.Close();
+        }
 
         private void Supplier_Click(object sender, RoutedEventArgs e)
         {
@@ -354,7 +356,33 @@ namespace KasirCokro.Views.Admin
             this.Close();
         }
 
+        private void Kas_Click(object sender, RoutedEventArgs e)
+        {
+            KasPage kasPage = new KasPage();
+            kasPage.Show();
+            this.Close();
+        }
 
+        private void TransactionMasuk_Click(object sender, RoutedEventArgs e)
+        {
+            TransactionMasukPage transactionMasuk = new TransactionMasukPage();
+            transactionMasuk.Show();
+            this.Close();
+        }
+
+        private void TransactionKeluar_Click(object sender, RoutedEventArgs e)
+        {
+            var transactionKeluarWindow = new TransactionKeluarPage();
+            transactionKeluarWindow.Show();
+            this.Close();
+        }
+
+        private void Pihutang_Click(object sender, RoutedEventArgs e)
+        {
+            PihutangPage pihutangPage = new PihutangPage();
+            pihutangPage.Show();
+            this.Close();
+        }
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Yakin ingin logout?", "Konfirmasi",
