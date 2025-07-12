@@ -330,8 +330,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - LiveCharts - MIT License
 
 ### 🏆 **Acknowledgments**
-- **@TokittoChizuru** - For your valuable contribution to this project.
-- **@Arestalia** - For your collaboration and efforts throughout this project.
+- **[@TokittoChizuru](https://github.com/TokittoChizuru)** - For your valuable contribution to this project.
+- **[@Arestalia](https://github.com/Arestalia)** - For your collaboration and efforts throughout this project.
 - **Material Design Team** - For beautiful UI components
 - **MySQL Team** - For reliable database system
 - **Open Source Community** - For amazing libraries dan tools
