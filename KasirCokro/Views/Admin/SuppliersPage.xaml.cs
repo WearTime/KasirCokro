@@ -185,7 +185,7 @@ namespace KasirCokro.Views.Admin
                                  MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                var login = new LoginWindow();
+                var login = new LoginWindow1();
                 login.Show();
                 this.Close();
             }

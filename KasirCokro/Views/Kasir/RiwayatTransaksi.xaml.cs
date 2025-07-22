@@ -297,8 +297,8 @@ Menggunakan data sample...", "Warning",
 
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.Show();
+            LoginWindow1 LoginWindow1 = new LoginWindow1();
+            LoginWindow1.Show();
             this.Close();
         }
         #endregion

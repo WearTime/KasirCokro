@@ -316,7 +316,7 @@ namespace KasirCokro.Views.Admin
 
             if (result == MessageBoxResult.Yes)
             {
-                var login = new LoginWindow();
+                var login = new LoginWindow1();
                 login.Show();
                 this.Close();
             }

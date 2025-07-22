@@ -469,7 +469,7 @@ namespace KasirCokro.Views.Admin
 
             if (result == MessageBoxResult.Yes)
             {
-                var loginWindow = new LoginWindow();
+                var loginWindow = new LoginWindow1();
                 loginWindow.Show();
                 this.Close();
             }

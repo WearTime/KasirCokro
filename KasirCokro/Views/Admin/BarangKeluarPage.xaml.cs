@@ -817,7 +817,7 @@ namespace KasirCokro.Views.Admin
             if (MessageBox.Show("Apakah Anda yakin ingin logout?", "Konfirmasi", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
 
-                var loginPage = new LoginWindow();
+                var loginPage = new LoginWindow1();
                 loginPage.Show();
                 this.Close();
             }
